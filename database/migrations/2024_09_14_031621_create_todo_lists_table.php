@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->text('task');
+            $table->date('fecha_inicio');
+            $table->date('fecha_fin');
             $table->enum('status', ['0', '1'])->default('0');
             $table->timestamps();
         });

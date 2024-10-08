@@ -17,9 +17,12 @@ return new class extends Migration
             $table->string('rut')->unique();
             $table->string('name')->nullable();
             $table->string('address')->nullable();
-            $table->string('email')->unique();
+            $table->string('city')->nullable();
+            $table->string('comuna')->nullable();
+            $table->string('email')->nullable();
+            $table->string('email_secondary')->nullable();
             $table->string('phone')->nullable();
-
+            $table->string('giro')->nullable();
             $table->timestamps();
         });
     }

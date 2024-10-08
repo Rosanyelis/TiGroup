@@ -1,5 +1,5 @@
 @extends('auth.layouts.app')
-
+@section('title', 'Iniciar Sesión')
 @section('content')
     <div class="position-relative">
         <div class="authentication-wrapper authentication-basic container-p-y p-4 p-sm-0">
@@ -8,7 +8,7 @@
                 <div class="card p-md-7 p-1">
                     <!-- Logo -->
                     <div class="app-brand justify-content-center mt-5">
-                        <img  src="{{ asset('../../assets/img/TiGroup.png') }}" width="50%" alt="logo" />
+                        <img  src="{{ asset('assets/img/TIGroup.png') }}" width="50%" alt="logo" />
                     </div>
                     <!-- /Logo -->
 
@@ -61,7 +61,7 @@
                 <!-- /Login -->
                 <img
                     alt="mask"
-                    src="../../assets/img/illustrations/auth-basic-login-mask-light.png"
+                    src="assets/img/illustrations/auth-basic-login-mask-light.png"
                     class="authentication-image d-none d-lg-block"
                     data-app-light-img="illustrations/auth-basic-login-mask-light.png"
                     data-app-dark-img="illustrations/auth-basic-login-mask-dark.png" />

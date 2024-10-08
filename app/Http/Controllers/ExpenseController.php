@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Expense;
+use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 use App\Http\Requests\StoreExpenseRequest;
 use App\Http\Requests\UpdateExpenseRequest;
 
@@ -11,9 +13,18 @@ class ExpenseController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if ($request->ajax()) {
+            $data = Expense::all();
+            return DataTables::of($data)
+                ->addColumn('actions', function ($data) {
+                    return view('expenses.partials.actions', ['id' => $data->id]);
+                })
+                ->rawColumns(['actions'])
+                ->make(true);
+        }
+        return view('expenses.index');
     }
 
     /**
@@ -21,7 +32,7 @@ class ExpenseController extends Controller
      */
     public function create()
     {
-        //
+        return view('expenses.create');
     }
 
     /**
@@ -29,38 +40,40 @@ class ExpenseController extends Controller
      */
     public function store(StoreExpenseRequest $request)
     {
-        //
+        $data = $request->all();
+        $data['user_id'] = auth()->user()->id;
+        $expense = Expense::create($data);
+        return redirect()->route('expense.index')->with('success', 'Gasto creado con exito');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Expense $expense)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Expense $expense)
+    public function edit($expense)
     {
-        //
+        $data = Expense::find($expense);
+        return view('expenses.edit', compact('data'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateExpenseRequest $request, Expense $expense)
+    public function update(UpdateExpenseRequest $request, $expense)
     {
-        //
+        $data = $request->all();
+        $expense = Expense::find($expense);
+        $expense->update($data);
+        return redirect()->route('expense.index')->with('success', 'Gasto actualizado con exito');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Expense $expense)
+    public function destroy($expense)
     {
-        //
+        $expense = Expense::find($expense);
+        $expense->delete();
+        return redirect()->route('expense.index')->with('success', 'Gasto eliminado con exito');
     }
 }

@@ -19,7 +19,9 @@
   // Date
   if (flatpickrDate) {
     flatpickrDate.flatpickr({
-      monthSelectorType: 'static'
+      monthSelectorType: 'static',
+    //   dateFormat: 'd-m-Y',
+      locale: 'es'
     });
   }
 

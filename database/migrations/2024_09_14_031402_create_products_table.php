@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->decimal('price', 10, 2);
             $table->decimal('cost', 10, 2)->nullable();
-            $table->integer('quantity');
+            $table->integer('quantity')->nullable();
             $table->string('type');
             $table->string('description')->nullable();
             $table->timestamps();

@@ -11,7 +11,7 @@ class StoreExpenseRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,18 @@ class StoreExpenseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required'],
+            'note' => ['required'],
+            'amount' => ['required'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'El Tipo de Gasto es obligatorio',
+            'note.required' => 'La descripción es obligatoria',
+            'amount.required' => 'El monto es obligatorio',
         ];
     }
 }

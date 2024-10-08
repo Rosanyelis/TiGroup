@@ -11,7 +11,7 @@ class UpdateCategoryRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,15 @@ class UpdateCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'unique:App\Models\Category,name,'.$this->id],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'La categoría es obligatoria',
+            'name.unique' => 'La categoría ya existe',
         ];
     }
 }

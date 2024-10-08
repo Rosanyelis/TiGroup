@@ -17,6 +17,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'rol_id',
         'name',
         'email',
         'password',
@@ -44,4 +45,16 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function rol()
+    {
+        return $this->belongsTo(Rols::class, 'rol_id', 'id');
+    }
+
+    public function todolists()
+    {
+        return $this->hasMany(TodoList::class, 'user_id', 'id');
+    }
+
+    
 }
