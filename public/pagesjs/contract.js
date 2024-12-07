@@ -4,13 +4,18 @@
 
 'use strict';
     var dt_ajax_table = $('.datatables-contract');
+    var dt_ajax_table_due = $('.datatables-contract-due');
+    var dt_ajax_table_renew = $('.datatables-contract-renew');
+
+
     const numberFormat2 = new Intl.NumberFormat('de-DE');
-    const basepath = "http://tigroup.test/assets/images/";
-    const baseStorage = "http://tigroup.test/";
+    const basepath = document.querySelector('html').getAttribute('data-base-url') + "assets/images/";
+    const baseStorage = document.querySelector('html').getAttribute('data-base-url');
     var producto = $('#producto');
     var totalfinal = 0;
     var totalIVA = 0;
     var datosTabla = [];
+
 $(function () {
 
     if (dt_ajax_table.length) {
@@ -42,7 +47,8 @@ $(function () {
                 {
                     targets: [3],
                     render: function (data) {
-                        return moment(data).format('DD-MM-YYYY');
+                        moment.locale('es');
+                        return moment(data).format('LL');
                     }
                 },
                 {
@@ -69,7 +75,146 @@ $(function () {
                             return '<span class="badge bg-warning">Por Facturar</span>';
                         }
                         if (data == 'Activo') {
-                            return '<span class="badge bg-success">Por Facturar</span>';
+                            return '<span class="badge bg-success">Activo</span>';
+                        }
+                        if (data == 'Vencido') {
+                            return '<span class="badge bg-danger">Vencido</span>';
+                        }
+                    }
+                },
+
+            ]
+
+        });
+    }
+
+    if (dt_ajax_table_due.length) {
+        var dt_ajax_due = dt_ajax_table_due.dataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "/contratos/datatable-due",
+            dataType: 'json',
+            type: "POST",
+            dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>><"table-responsive"t><"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/2.0.8/i18n/es-ES.json",
+                paginate: {
+                    next: '<i class="ri-arrow-right-s-line"></i>',
+                    previous: '<i class="ri-arrow-left-s-line"></i>'
+                }
+            },
+            columns: [
+                {data: 'correlativo', name: 'correlativo'},
+                {data: 'customer.business_name', name: 'customer.business_name'},
+                {data: 'type_contract', name: 'type_contract'},
+                {data: 'end_date', name: 'end_date'},
+                {data: 'type', name: 'type'},
+                {data: 'grand_total', name: 'grand_total'},
+                {data: 'status', name: 'status'},
+                {data: 'actions', name: 'actions', orderable: false, searchable: false},
+            ],
+            columnDefs: [
+                {
+                    targets: [3],
+                    render: function (data) {
+                        moment.locale('es');
+                        return moment(data).format('LL');
+                    }
+                },
+                {
+                    targets: [4],
+                    render: function (data) {
+                        if (data == 'annual') {
+                            return 'Anual';
+                        }
+                        if (data == 'two years') {
+                            return 'Bianual';
+                        }
+                    }
+                },
+                {
+                    targets: [5],
+                    render: function (data) {
+                        return '$ ' + numberFormat2.format(data);
+                    }
+                },
+                {
+                    targets: [6],
+                    render: function (data) {
+                        if (data == 'Por Facturar') {
+                            return '<span class="badge bg-warning">Por Facturar</span>';
+                        }
+                        if (data == 'Activo') {
+                            return '<span class="badge bg-success">Activo</span>';
+                        }
+                        if (data == 'Vencido') {
+                            return '<span class="badge bg-danger">Vencido</span>';
+                        }
+                    }
+                },
+
+            ]
+
+        });
+    }
+
+    if (dt_ajax_table_renew.length) {
+        var dt_ajax_renew = dt_ajax_table_renew.dataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "/contratos/datatable-renew",
+            dataType: 'json',
+            type: "POST",
+            dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>><"table-responsive"t><"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/2.0.8/i18n/es-ES.json",
+                paginate: {
+                    next: '<i class="ri-arrow-right-s-line"></i>',
+                    previous: '<i class="ri-arrow-left-s-line"></i>'
+                }
+            },
+            columns: [
+                {data: 'correlativo', name: 'correlativo'},
+                {data: 'customer.business_name', name: 'customer.business_name'},
+                {data: 'type_contract', name: 'type_contract'},
+                {data: 'end_date', name: 'end_date'},
+                {data: 'type', name: 'type'},
+                {data: 'grand_total', name: 'grand_total'},
+                {data: 'status', name: 'status'},
+            ],
+            columnDefs: [
+                {
+                    targets: [3],
+                    render: function (data) {
+                        moment.locale('es');
+                        return moment(data).format('LL');
+                    }
+                },
+                {
+                    targets: [4],
+                    render: function (data) {
+                        if (data == 'annual') {
+                            return 'Anual';
+                        }
+                        if (data == 'two years') {
+                            return 'Bianual';
+                        }
+                    }
+                },
+                {
+                    targets: [5],
+                    render: function (data) {
+                        return '$ ' + numberFormat2.format(data);
+                    }
+                },
+                {
+                    targets: [6],
+                    render: function (data) {
+                        if (data == 'Por Facturar') {
+                            return '<span class="badge bg-warning">Por Facturar</span>';
+                        }
+                        if (data == 'Activo') {
+                            return '<span class="badge bg-success">Activo</span>';
                         }
                         if (data == 'Vencido') {
                             return '<span class="badge bg-danger">Vencido</span>';
@@ -88,7 +233,7 @@ $(function () {
             type: 'GET',
             url: '/cotizaciones/'+id+'/productjson',
             success: function(data) {
-                let costo = parseFloat(data.cost).toFixed(0);
+                let costo = parseFloat(data.price).toFixed(0);
                 $('#priceCost').val(costo);
                 $('#product_name').val(data.name);
                 $('#product_code').val(data.code);
@@ -207,13 +352,9 @@ $(function () {
                 icon: 'error',
                 title: 'Oops...',
                 text: 'No hay productos agregados, por favor agrega uno',
-                showCancelButton: true,
-                confirmButtonText: 'Si, eliminar!',
-                cancelButtonText: 'Cancelar',
                 customClass: {
-                  confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
-                  cancelButton: 'btn btn-outline-danger waves-effect'
-                },
+                    confirmButton: 'btn btn-primary waves-effect waves-light'
+                    },
                 buttonsStyling: false
             });
             return false;
@@ -228,7 +369,13 @@ $(function () {
         $('#formContract').submit();
     });
 
+    $('#flatpickr-date').flatpickr({
+        monthSelectorType: 'static',
+    //   dateFormat: 'd-m-Y',
+        locale: 'es'
+    });
 });
+
 
 
 function calcular() {

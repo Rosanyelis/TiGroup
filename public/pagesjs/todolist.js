@@ -43,12 +43,22 @@ $(function () {
                     }
 
                 },
-                {targets: 1,
+                {
+                    targets: 1,
                     render: function (data, type, row, meta) {
-                        if(row.status == 1){
-                            return `<p class=" tachado">${data}</p>`
+                        // Inicializar la variable de clases
+                        let classes = "";
+
+                        // Validar las condiciones y agregar clases según corresponda
+                        if (row.status == 1) {
+                            classes += "tachado ";
                         }
-                        return data;
+                        if (moment(row.fecha_fin).format('DD/MM/YYYY') <= moment().format('DD/MM/YYYY')) {
+                            classes += "text-danger ";
+                        }
+
+                        // Retornar el dato envuelto en <p> con las clases aplicadas
+                        return `<p class="${classes.trim()}">${data}</p>`;
                     }
                 },
                 {

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('task');
             $table->date('fecha_inicio');
             $table->date('fecha_fin');
+            $table->text('description')->nullable();
             $table->enum('status', ['0', '1'])->default('0');
             $table->timestamps();
         });

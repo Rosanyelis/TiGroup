@@ -52,7 +52,7 @@
                                         <label for="usersMultiple">Usuarios</label>
                                     </div>
                                 </div>
-                                <div class="mb-6 col-md-4">
+                                <div class="col-md-4">
                                     <div class="form-floating form-floating-outline">
                                         <input type="text" class="form-control flatpickr-input active"
                                         placeholder="DD-MM-YYYY" name="fecha_inicio" id="flatpickr-date"
@@ -66,20 +66,36 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div class="mb-6 col-md-4">
+                                <div class="col-md-4">
                                     <div class="form-floating form-floating-outline">
                                         <input type="text" class="form-control flatpickr-input active"
                                         placeholder="DD-MM-YYYY" name="fecha_fin" id="flatpickr-date2"
                                         value="{{ old('fecha_fin') }}">
                                         <label for="fecha_fin">Fecha Final</label>
-
-
                                     </div>
                                     @if($errors->has('fecha_fin'))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('fecha_fin') }}
                                         </div>
+                                    @endif
+                                </div>
+                                <div class="mb-6 col-md-12">
+                                    <div class="form-floating form-floating-outline">
+                                        <textarea
+                                            type="text"
+                                            class="form-control form-control-sm"
+                                            id="description"
+                                            name="description"
+                                            placeholder="Ingrese la descripción"
+                                            autofocus> {{ old('description') }}</textarea>
+                                        <label for="description">Descripción</label>
+
+                                        @if($errors->has('description'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('description') }}
+                                        </div>
                                         @endif
+                                    </div>
                                 </div>
                             </div>
                             <div class="row justify-content-end">

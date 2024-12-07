@@ -51,24 +51,6 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div class="mb-6 col-md-4">
-                                    <div class="form-floating form-floating-outline">
-                                        <input
-                                            type="text"
-                                            id="note"
-                                            name="note"
-                                            class="form-control @if($errors->has('note')) is-invalid @endif"
-                                            placeholder="Ingrese notas de Cotización"
-                                            value="{{ $quotation->note }}"
-                                        />
-                                        <label for="code">Notas</label>
-                                        @if($errors->has('note'))
-                                        <div class="invalid-feedback">
-                                            {{ $errors->first('note') }}
-                                        </div>
-                                        @endif
-                                    </div>
-                                </div>
                                 <div class="mb-6 col-md-2">
                                     <div class="form-floating form-floating-outline">
                                         <input type="text" class="form-control flatpickr-input active"
@@ -96,6 +78,20 @@
                                         @if($errors->has('closing_percentage'))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('closing_percentage') }}
+                                        </div>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="mb-6 col-md-12">
+                                    <div class="form-floating form-floating-outline">
+                                    <textarea name="note" id="note"
+                                        class="form-control h-px-100 @if($errors->has('note')) is-invalid @endif"
+                                        placeholder="Ingrese notas de Cotización">{{ $quotation->note }}</textarea>
+                                        <label for="code">Notas</label>
+                                        @if($errors->has('note'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('note') }}
                                         </div>
                                         @endif
                                     </div>

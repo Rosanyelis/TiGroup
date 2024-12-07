@@ -25,24 +25,24 @@
                             <div class="row">
                                 <div class="mb-6 col-md-4">
                                     <div class="form-floating form-floating-outline">
-                                        <select id="customer" name="customer" class="form-select select2"
+                                        <select id="customer_id" name="customer_id" class="form-select select2"
                                         placeholder="Selecione una cliente">
                                             <option value="">-- Seleccionar --</option>
                                             @foreach ($customers as $item)
-                                            <option value="{{ $item->business_name }}" {{ $data->customer_id == $item->id ? 'selected' : '' }}>{{ $item->business_name }}</option>
+                                            <option value="{{ $item->id }}" {{ $item->id == $data->customer_id ? 'selected' : '' }}>{{ $item->business_name }}</option>
                                             @endforeach
                                         </select>
                                         <label for="code">Cliente</label>
-                                        @if($errors->has('customer'))
+                                        @if($errors->has('customer_id'))
                                         <div class="invalid-feedback">
-                                            {{ $errors->first('customer') }}
+                                            {{ $errors->first('customer_id') }}
                                         </div>
                                         @endif
                                     </div>
                                 </div>
                                 <div class="mb-6 col-md-4">
                                     <div class="form-floating form-floating-outline">
-                                        <select id="type_contract" name="type_contract" class="form-select select2"
+                                        <select id="type_contract" name="type_contract" class="form-select  "
                                         placeholder="Selecione un Tipo de Contrato">
                                             <option value="">-- Seleccionar --</option>
                                             <option value="Contrato de Hosting" {{ $data->type_contract == 'Contrato de Hosting' ? 'selected' : '' }}>Contrato de Hosting</option>
@@ -54,6 +54,20 @@
                                         @if($errors->has('type_contract'))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('type_contract') }}
+                                        </div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-floating form-floating-outline">
+                                        <input type="text" class="form-control flatpickr-input active"
+                                            placeholder="DD-MM-YYYY" name="start_date" id="flatpickr-date"
+                                            value="{{ $data->start_date }}">
+                                        <label for="start_date">Fecha Inicio</label>
+
+                                        @if($errors->has('start_date'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('start_date') }}
                                         </div>
                                         @endif
                                     </div>
@@ -89,7 +103,7 @@
                                 </div>
                                 <div class="mb-6 col-md-4">
                                     <div class="form-floating form-floating-outline">
-                                        <select id="type" name="type" class="form-select select2"
+                                        <select id="type" name="type" class="form-select "
                                         placeholder="Selecione un Plazo">
                                             <option value="">-- Seleccionar --</option>
                                             <option value="annual" {{ $data->type == 'annual' ? 'selected' : '' }}>Anual</option>
@@ -117,6 +131,39 @@
                                         @if($errors->has('dominio'))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('dominio') }}
+                                        </div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="mb-6 col-md-4">
+                                    <div class="form-floating form-floating-outline">
+                                        <select id="confirm_invoice" name="confirm_invoice" class="form-select select2"
+                                        placeholder="Selecione un Plazo">
+                                            <option value="">-- Seleccionar --</option>
+                                            <option value="Si" {{ $data->confirm_invoice == 'Si' ? 'selected' : '' }}>Si</option>
+                                            <option value="No" {{ $data->confirm_invoice == 'No' ? 'selected' : '' }}>No</option>
+                                        </select>
+                                        <label for="confirm_invoice">¿Desea que se genere la factura del Contrato?</label>
+                                        @if($errors->has('confirm_invoice'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('confirm_invoice') }}
+                                        </div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="mb-6 col-md-4">
+                                    <div class="form-floating form-floating-outline">
+                                        <select id="status" name="status" class="form-select select2"
+                                        placeholder="Selecione el Status">
+                                            <option value="">-- Seleccionar --</option>
+                                            <option value="Por Facturar" {{ $data->status == 'Por Facturar' ? 'selected' : '' }}>Por Facturar</option>
+                                            <option value="Activo" {{ $data->status == 'Activo' ? 'selected' : '' }} >Activo</option>
+                                            <option value="Vencido" {{ $data->status == 'Vencido' ? 'selected' : '' }}>Vencido</option>
+                                        </select>
+                                        <label for="status">Estatus del Contrato</label>
+                                        @if($errors->has('status'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('status') }}
                                         </div>
                                         @endif
                                     </div>

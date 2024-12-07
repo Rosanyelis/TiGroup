@@ -7,121 +7,191 @@
 @endsection
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
-    <!-- Ajax Sourced Server-side -->
-    <div class="card">
-        <div class="card-header header-elements border-bottom">
-            <h5 class="mb-0 me-2">Contratos</h5>
+    <div class="nav-align-top mb-6">
+        <ul class="nav nav-pills mb-4 " role="tablist">
+            <li class="nav-item" role="presentation">
+                <button type="button" class="nav-link active" role="tab"
+                data-bs-toggle="tab" data-bs-target="#navs-pills-top-contratos"
+                aria-controls="navs-pills-top-contratos" aria-selected="true">Contratos</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
+                data-bs-target="#navs-pills-top-contratos-por-vencer" aria-controls="navs-pills-top-contratos-por-vencer"
+                aria-selected="false" tabindex="-1">Contratos por Vencer
+                <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-danger ms-2 pt-50">{{ $countContractDue }}</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
+                data-bs-target="#navs-pills-top-contratos-renovados" aria-controls="navs-pills-top-contratos-renovados"
+                aria-selected="false" tabindex="-1">Contratos Renovados
+                </button>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane px-0 fade active show" id="navs-pills-top-contratos" role="tabpanel">
+                <!-- Ajax Sourced Server-side -->
+                <div class="card-header header-elements border-bottom pb-2">
+                    <h5 class="mb-0 me-2">Contratos</h5>
 
-            <div class="card-header-elements ms-auto">
-                <a href="{{ route('contract.create') }}" class="btn btn-sm btn-primary"
-                >Crear Contrato</a>
+                    <div class="card-header-elements ms-auto">
+                        <a href="{{ route('contract.create') }}" class="btn btn-sm btn-primary"
+                        >Crear Contrato</a>
+                    </div>
+                </div>
+
+                <div class="card-datatable text-nowrap px-0">
+                    <table class="datatables-contract table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Nº</th>
+                                <th>Cliente</th>
+                                <th>Tipo</th>
+                                <th>Fecha Venc.</th>
+                                <th>Plazo</th>
+                                <th>Valor</th>
+                                <th>Estado</th>
+                                <th style="width: 10px"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <!--/ Ajax Sourced Server-side -->
+
+            </div>
+            <div class="tab-pane fade" id="navs-pills-top-contratos-por-vencer" role="tabpanel">
+                <div class="card-header header-elements border-bottom pb-4">
+                    <h5 class="mb-0 me-2">Contratos por Vencer </h5>
+
+                </div>
+
+                <div class="card-datatable text-nowrap px-0">
+                    <table class="datatables-contract-due table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Nº</th>
+                                <th>Cliente</th>
+                                <th>Tipo</th>
+                                <th>Fecha Venc.</th>
+                                <th>Plazo</th>
+                                <th>Valor</th>
+                                <th>Estado</th>
+                                <th style="width: 10px"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="navs-pills-top-contratos-renovados" role="tabpanel">
+                <div class="card-header header-elements border-bottom pb-4">
+                    <h5 class="mb-0 me-2">Contratos Renovados </h5>
+                </div>
+
+                <div class="card-datatable text-nowrap px-0">
+                    <table class="datatables-contract-renew table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Nº</th>
+                                <th>Cliente</th>
+                                <th>Tipo</th>
+                                <th>Fecha Venc.</th>
+                                <th>Plazo</th>
+                                <th>Valor</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
         </div>
+        <!-- Modal ver cotización-->
+        <div class="modal fade" id="ContractsModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalCenterTitle">Ver Contrato Nº <span id="correlativo"></span> </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <strong>Razón Social o Cliente :</strong><br>
+                                <span id="bussines_name"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <strong>Fecha de Inicio:</strong><br>
+                                <span id="start_date"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <strong>Fecha de Vencimiento:</strong><br>
+                                <span id="end_date"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <strong>Tipo de Contrato:</strong><br>
+                                <span id="type_contract"></span>
+                            </div>
 
-        <div class="card-datatable text-nowrap">
-            <table class="datatables-contract table table-sm">
-                <thead>
-                    <tr>
-                        <th>Nº Contrato</th>
-                        <th>Cliente</th>
-                        <th>Tipo</th>
-                        <th>Fecha Venc.</th>
-                        <th>Plazo</th>
-                        <th>Valor</th>
-                        <th>Estado</th>
-                        <th style="width: 10px"></th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </div>
-    <!--/ Ajax Sourced Server-side -->
-    <!-- Modal ver cotización-->
-    <div class="modal fade" id="ContractsModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalCenterTitle">Ver Contrato Nº <span id="correlativo"></span> </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <strong>Razón Social o Cliente :</strong><br>
-                            <span id="bussines_name"></span>
-                        </div>
-                        <div class="col-md-4">
-                            <strong>Fecha de Inicio:</strong><br>
-                            <span id="start_date"></span>
-                        </div>
-                        <div class="col-md-4">
-                            <strong>Fecha de Vencimiento:</strong><br>
-                            <span id="end_date"></span>
-                        </div>
-                        <div class="col-md-4">
-                            <strong>Tipo de Contrato:</strong><br>
-                            <span id="type_contract"></span>
-                        </div>
+                            <div class="col-md-4">
+                                <strong>Plazo de Contrato:</strong><br>
+                                <span id="type"></span>
+                            </div>
 
-                        <div class="col-md-4">
-                            <strong>Plazo de Contrato:</strong><br>
-                            <span id="type"></span>
-                        </div>
+                            <div class="col-md-4">
+                                <strong>Dominio:</strong><br>
+                                <span id="dominio"></span>
+                            </div>
 
-                        <div class="col-md-4">
-                            <strong>Dominio:</strong><br>
-                            <span id="dominio"></span>
-                        </div>
+                            <div class="col-md-4">
+                                <strong>Estatus:</strong><br>
+                                <span id="estatus"></span>
+                            </div>
 
-                        <div class="col-md-4">
-                            <strong>Estatus:</strong><br>
-                            <span id="estatus"></span>
-                        </div>
+                            <div class="col-md-12">
+                                <strong>Notas:</strong><br>
+                                <span id="note"></span>
+                            </div>
 
-                        <div class="col-md-12">
-                            <strong>Notas:</strong><br>
-                            <span id="note"></span>
-                        </div>
+                            <div class="col-md-12 text-center">
+                                <h4>Detalles de Contrato</h4>
+                            </div>
 
-                        <div class="col-md-12 text-center">
-                            <h4>Detalles de Contrato</h4>
-                        </div>
-
-                        <div class="col-md-12">
-                            <table class="table table-sm table-striped table-bordered nowrap w-100">
-                                <thead>
-                                    <tr class="text-center text-uppercase fw-semibold">
-                                        <th>Producto</th>
-                                        <th>Detalles</th>
-                                        <th>Cantidad</th>
-                                        <th>Precio</th>
-                                        <th>Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="details" class="text-center">
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colspan="4" class="text-end fw-semibold">Subtotal</td>
-                                        <td id="subtotal" class="text-center fw-semibold"></td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4" class="text-end fw-semibold">IVA (% 19)</td>
-                                        <td id="iva" class="text-center fw-semibold"></td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4" class="text-end fw-semibold">Total</td>
-                                        <td id="total" class="text-center fw-semibold"></td>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                            <div class="col-md-12">
+                                <table class="table table-sm table-striped table-bordered nowrap w-100">
+                                    <thead>
+                                        <tr class="text-center text-uppercase fw-semibold">
+                                            <th>Producto</th>
+                                            <th>Detalles</th>
+                                            <th>Cantidad</th>
+                                            <th>Precio</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="details" class="text-center">
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="4" class="text-end fw-semibold">Subtotal</td>
+                                            <td id="subtotal" class="text-center fw-semibold"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="text-end fw-semibold">IVA (% 19)</td>
+                                            <td id="iva" class="text-center fw-semibold"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="text-end fw-semibold">Total</td>
+                                            <td id="total" class="text-center fw-semibold"></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <!--/ Modal ver cotización-->
     </div>
-    <!--/ Modal ver cotización-->
+
 </div>
 @endsection
 

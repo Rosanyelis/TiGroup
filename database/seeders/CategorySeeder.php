@@ -19,5 +19,8 @@ class CategorySeeder extends Seeder
         Category::create(['name' => 'Soporte TI']);
         Category::create(['name' => 'Redes Sociales']);
         Category::create(['name' => 'Desarrollo Web']);
+        Category::create(['name' => 'Hardware']);
+        Category::create(['name' => 'Redes']);
+        Category::create(['name' => 'Oficina']);
     }
 }

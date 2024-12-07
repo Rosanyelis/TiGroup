@@ -36,19 +36,19 @@
                         <div data-i18n="Tareas">Tareas</div>
                     </a>
                 </li>
-                <!-- <li class="menu-item @if (Route::currentRouteName() == 'kamban.index') active @endif">
+                <li class="menu-item @if (Route::currentRouteName() == 'kamban.index') active @endif">
                     <a href="{{ route('kamban.index') }}" class="menu-link">
                         <i class="menu-icon tf-icons ri-list-check-3"></i>
-                        <div data-i18n="Kanban">Kanban</div>
+                        <div data-i18n="Kanban">Kamban</div>
                     </a>
-                </li> -->
+                </li>
                 <li class="menu-item
                     @if (Route::currentRouteName() == 'contract.index' ||
                         Route::currentRouteName() == 'contract.create' ||
                         Route::currentRouteName() == 'contract.edit') active @endif">
                     <a href="{{ route('contract.index') }}" class="menu-link">
                         <i class="menu-icon tf-icons ri-file-shield-line"></i>
-                        <div data-i18n="Contratos">Contratos</div>
+                        <div data-i18n="Suscripciones">Suscripciones</div>
                     </a>
                 </li>
                 <li class="menu-item
@@ -60,15 +60,16 @@
                         <div data-i18n="Cotizaciones">Cotizaciones</div>
                     </a>
                 </li>
-                <!-- <li class="menu-item
+
+                <li class="menu-item
                     @if (Route::currentRouteName() == 'invoice.index' ||
                         Route::currentRouteName() == 'invoice.create' ||
                         Route::currentRouteName() == 'invoice.edit') active @endif">
                     <a href="{{ route('invoice.index') }}" class="menu-link">
                         <i class="menu-icon tf-icons ri-file-list-line"></i>
-                        <div data-i18n="Facturas">Facturas</div>
+                        <div data-i18n="Cobranza">Cobranza</div>
                     </a>
-                </li> -->
+                </li>
                 <li class="menu-item
                     @if (Route::currentRouteName() == 'purchase.index' ||
                         Route::currentRouteName() == 'purchase.create' ||

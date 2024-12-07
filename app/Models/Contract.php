@@ -27,4 +27,15 @@ class Contract extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
+
+    public function invoice()
+    {
+        return $this->hasMany(Invoice::class, 'contract_id', 'id');
+    }
+
+    public function contractrenewed()
+    {
+        return $this->hasMany(ContractsRenewed::class, 'contract_id', 'id');
+    }
 }

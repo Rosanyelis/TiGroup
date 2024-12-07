@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
+use App\Http\Requests\ProfileUpdateRequest;
 
 class ProfileController extends Controller
 {
@@ -26,7 +27,19 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        if ($request->hasFile('photo')) {
+            $urlfile = $this->saveFile($request->file('photo'));
+            $request->user()->fill([
+                'photo' => $urlfile,
+            ])->save();
+        }
+        $request->user()->fill([
+               'name' => $request->name,
+               'email' => $request->email,
+               'firstname' => $request->firstname,
+               'lastname' => $request->lastname,
+               'phone' => $request->phone
+        ]);
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
@@ -34,7 +47,7 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return Redirect::route('profile.edit')->with('success', 'Perfil actualizado con éxito.');
     }
 
     /**
@@ -56,5 +69,24 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    public function saveFile($archivo)
+    {
+        if ($archivo != null) {
+            $uploadPath = public_path('/storage/profile/');
+            $file = $archivo;
+            $extension = $file->getClientOriginalExtension();
+            $uuid = Str::uuid(4);
+            $fileName = $uuid . '.' . $extension;
+            $file->move($uploadPath, $fileName);
+            $url = '/storage/profile/'.$fileName;
+            $urlfile = $url;
+        } else {
+            $urlfile = null;
+        }
+
+
+        return $urlfile;
     }
 }

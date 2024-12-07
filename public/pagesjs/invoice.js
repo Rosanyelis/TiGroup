@@ -5,8 +5,8 @@
 'use strict';
     var dt_ajax_table = $('.datatables-invoice');
     const numberFormat2 = new Intl.NumberFormat('de-DE');
-    const basepath = "http://tigroup.test/assets/images/";
-    const baseStorage = "http://tigroup.test/";
+    const basepath = document.querySelector('html').getAttribute('data-base-url') + "assets/images/";
+    const baseStorage = document.querySelector('html').getAttribute('data-base-url');
     var producto = $('#producto');
     var totalfinal = 0;
     var totalIVA = 0;
@@ -30,50 +30,96 @@ $(function () {
                 }
             },
             columns: [
-                {data: 'correlativo', name: 'correlativo'},
-                {data: 'customer.name', name: 'customer.name'},
-                {data: 'type_contract', name: 'type_contract'},
-                {data: 'end_date', name: 'end_date'},
-                {data: 'type', name: 'type'},
-                {data: 'grand_total', name: 'grand_total'},
+                {data: 'n_factura', name: 'n_factura'},
+                {data: 'customer.business_name', name: 'customer.business_name'},
+                {data: 'motive', name: 'motive'},
+                {data: 'due_date', name: 'due_date'},
+                {data: 'total', name: 'total'},
+                {data: 'payment_form', name: 'payment_form'},
                 {data: 'status', name: 'status'},
-                {data: 'actions', name: 'actions', orderable: false, searchable: false},
             ],
             columnDefs: [
                 {
+                    targets: [0],
+                    render: function (data, type, row) {
+                        if (row.n_factura == null) {
+                            return `
+                                <button type="button" class="btn btn-info btn-sm" onclick="addInvoicefile(${row.id})"
+                                    aria-expanded="false">agregar
+                                </button>
+                            `;
+                        } else {
+                            return `${row.n_factura}`;
+                        }
+
+                    }
+                },
+                {
                     targets: [3],
                     render: function (data) {
-                        return moment(data).format('DD-MM-YYYY');
+                        moment.locale('es');
+                        return moment(data).format('LL');
                     }
                 },
                 {
                     targets: [4],
                     render: function (data) {
-                        if (data == 'annual') {
-                            return 'Anual';
-                        }
-                        if (data == 'two years') {
-                            return 'Bianual';
-                        }
-                    }
-                },
-                {
-                    targets: [5],
-                    render: function (data) {
                         return '$ ' + numberFormat2.format(data);
                     }
                 },
                 {
-                    targets: [6],
-                    render: function (data) {
-                        if (data == 'Por Facturar') {
-                            return '<span class="badge bg-warning">Por Facturar</span>';
+                    targets: [5],
+                    render: function (data, type, row) {
+                        if (data == 'Sin Definir') {
+                            return '<span class="badge bg-dark">Sin Definir</span>';
                         }
-                        if (data == 'Activo') {
-                            return '<span class="badge bg-success">Por Facturar</span>';
+
+                        if (data != 'Sin Definir') {
+                            return '<span class="badge bg-info"><i class="ri-money-dollar-circle-line"></i> ' + data + '</span>';
+
+                        }
+                    }
+                },
+                {
+                    targets: [6],
+                    render: function (data, type, row) {
+                        if (data == 'Por Facturar') {
+                            return `
+                                <button type="button" class="btn btn-info btn-sm dropdown-toggle"
+                                    data-bs-toggle="dropdown" aria-expanded="false">Por Facturar
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <h6 class="dropdown-header text-uppercase">cambiar Estatus a</h6>
+                                    </li>
+                                    <li><a class="dropdown-item" href="#" onclick="changeStatus('Facturado', ${row.id})">Facturado</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="changeStatus('Pagado', ${row.id})">Pagado</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="changeStatus('Cancelado', ${row.id})">Cancelado</a></li>
+                                </ul>
+                            `;
+                        }
+                        if (data == 'Facturado') {
+                            return `
+                                <button type="button" class="btn btn-warning btn-sm dropdown-toggle"
+                                    data-bs-toggle="dropdown" aria-expanded="false">Facturado
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <h6 class="dropdown-header text-uppercase">cambiar Estatus a</h6>
+                                    </li>
+                                    <li><a class="dropdown-item" href="#" onclick="changeStatus('Pagado', ${row.id})">Pagado</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="changeStatus('Cancelado', ${row.id})">Cancelado</a></li>
+                                </ul>
+                            `;
+                        }
+                        if (data == 'Pagado') {
+                            return '<span class="badge bg-success">Pagado</span>';
                         }
                         if (data == 'Vencido') {
                             return '<span class="badge bg-danger">Vencido</span>';
+                        }
+                        if (data == 'Cancelado') {
+                            return '<span class="badge bg-dark">Cancelado</span>';
                         }
                     }
                 },
@@ -106,94 +152,58 @@ $(function () {
     }
 
     $('#add_product').on('click', function() {
+        let code = '-';
         let producto = $('#product_name').val();
-        let details = $('#details').val();
-        let code = $('#product_code').val();
-        let price = parseFloat($('#priceCost').val());
+        let description = $('#description').val();
+        let price = parseFloat($('#precio').val());
         let quantity = parseFloat($('#quantity').val());
-        let totalp = price * quantity;
-        let subtotal = totalp;
+        let calculo = price * quantity;
+        let impuesto = ($('#impuesto_adicional').val() == '') ? 0 : parseFloat($('#impuesto_adicional').val()) / 100;
+        let descuento = ($('#descuento').val() == '') ? 0 : parseFloat($('#descuento').val()) / 100;
+        let valordescuento = calculo * descuento;
+        let valorimpuesto = calculo * impuesto;
+        let subtotal = calculo - valordescuento + valorimpuesto;
+        let codigo = generarCodigoAleatorioAlfanumerico(4);
 
-        if (datosTabla.length > 0) {
-            let index = datosTabla.findIndex((item) => item.code == code);
 
-            if (index == -1) {
-                datosTabla.push({
-                    'code': code,
-                    'product': producto,
-                    'details': details,
-                    'quantity': quantity,
-                    'price': price,
-                    'subtotal': subtotal.toFixed(0)
-                });
+        datosTabla.push({
+            'code': code,
+            'codep': codigo,
+            'product': producto,
+            'details': description,
+            'price': price,
+            'quantity': quantity,
+            'impuesto_adicional': valorimpuesto.toFixed(0),
+            'descuento': valordescuento.toFixed(0),
+            'subtotal': subtotal.toFixed(0)
+        });
 
-                $("#table_products tbody").append(
-                `<tr id="row-`+code+`">
-                    <td>`+producto+`</td>
-                    <td>`+details+`</td>
-                    <td id="quantity-`+code+`">`+quantity+`</td>
-                    <td id="price-`+code+`">`+price+`</td>
-                    <td id="subtotal-`+code+`">`+subtotal.toFixed(0)+`</td>
-                    <td>
-                        <button type="button" class="btn btn-danger btn-sm"
-                            id="delete_product" data-code="`+code+`">
-                            <i class="ri-delete-bin-fill"></i>
-                        </button>
-                    </td>
-                </tr>`);
-
-            }
-
-            if (index != -1) {
-                datosTabla[index].quantity += quantity;
-                datosTabla[index].price = price;
-                datosTabla[index].subtotal = datosTabla[index].quantity * datosTabla[index].price;
-
-                let IDqty = "#quantity-"+code;
-                let IDprice = "#price-"+code;
-                let IDsubtotal = "#subtotal-"+code;
-
-                $(IDqty).text(datosTabla[index].quantity);
-                $(IDprice).text(datosTabla[index].price);
-                $(IDsubtotal).text(datosTabla[index].subtotal);
-            }
-        }
-
-        if (datosTabla.length == 0 ) {
-            datosTabla.push({
-                'code': code,
-                'product': producto,
-                'details': details,
-                'quantity': quantity,
-                'price': price,
-                'subtotal': subtotal.toFixed(0)
-            });
-
-            $("#table_products tbody").append(
-            `<tr id="row-`+code+`">
+        $("#table_products tbody").append(
+            `<tr id="row-`+codigo+`">
                 <td>`+producto+`</td>
-                    <td>`+details+`</td>
-                    <td id="quantity-`+code+`">`+quantity+`</td>
-                    <td id="price-`+code+`">`+price+`</td>
-                    <td id="subtotal-`+code+`">`+subtotal.toFixed(0)+`</td>
+                <td>`+description+`</td>
+                <td>`+quantity+`</td>
+                <td>`+price+`</td>
+                <td>`+valorimpuesto.toFixed(0)+`</td>
+                <td>`+valordescuento.toFixed(0)+`</td>
+                <td>`+subtotal.toFixed(0)+`</td>
                 <td>
                     <button type="button" class="btn btn-danger btn-sm"
-                        id="delete_product" data-code="`+code+`">
+                        id="delete_product" data-code="`+codigo+`">
                         <i class="ri-delete-bin-fill"></i>
                     </button>
                 </td>
             </tr>`);
 
-        }
         calcular();
-        $("#producto").val(null).trigger("change");
+
         $("#product_name").val("");
-        $("#costo_venta").val('');
+        $("#description").val('');
         $("#quantity").val('');
         $("#details").val('');
-        $('#priceCost').val('');
-        $('#product_name').val('');
-        $('#product_code').val('');
+        $('#precio').val('');
+        $('#impuesto_adicional').val('');
+        $('#descuento').val('');
 
     });
 
@@ -202,7 +212,7 @@ $(function () {
         let id = "#row-" + product;
 
         datosTabla = datosTabla.filter(function(item) {
-            return item.code !== product;
+            return item.codep !== product;
         });
 
         $(id).remove();
@@ -229,12 +239,13 @@ $(function () {
         }
 
         $('#array_products').val(JSON.stringify(datosTabla));
-        $('#subtotalcomplete').val(parseFloat($('#subtotal').text()));
+        $('#subtotalcomplete').val(parseFloat($('#monto_neto').text()));
         $('#totalcomplete').val(parseFloat($('#total').text()));
         $('#ivacomplete').val(parseFloat($('#iva').text()));
+        $('#impuestocomplete').val(parseFloat($('#impuesto_adicional').text()));
         $('#guardar').prop('disabled', true);
         $('#guardar').html('<span class="spinner-border me-1" role="status" aria-hidden="true"></span> Por favor, espere...');
-        $('#formContract').submit();
+        $('#formInvoice').submit();
     });
 
 });
@@ -244,80 +255,68 @@ function calcular() {
     var totalfinal = 0;
     var totalIVA = 0;
     var total = 0;
+    var totalImpuesto = 0;
     for (let i = 0; i < datosTabla.length; i++) {
         totalfinal += parseInt(datosTabla[i].subtotal);
+        totalImpuesto += parseInt(datosTabla[i].impuesto_adicional);
     }
     totalIVA = parseFloat(totalfinal) * 0.19;
-    total = totalfinal + totalIVA;
-    $("#subtotal").empty();
-    $("#subtotal").text(parseFloat(totalfinal).toFixed(0));
+    total = totalfinal + totalIVA + totalImpuesto;
+    $("#monto_neto").empty();
+    $("#monto_neto").text(parseFloat(totalfinal).toFixed(0));
     $("#iva").empty();
     $("#iva").text(totalIVA.toFixed(0));
     $("#total").empty();
     $("#total").text(total.toFixed(0));
+    $("#impuesto_adicional").empty();
+    $("#impuesto_adicional").text(totalImpuesto.toFixed(0));
 }
 
-function viewRecord(id) {
-    $.ajax({
-        url: "/contratos/" + id + "/show",
-        type: 'GET',
-        success: function(res) {
-            console.log(res);
-            $('#correlativo').text(res.correlativo);
-            $('#bussines_name').text(res.customer.business_name);
-            $('#type_contract').text(res.type_contract);
-            $('#type').text((res.type == 'annual') ? 'Anual' : 'Bianual');
-            $('#start_date').text(res.start_date);
-            $('#end_date').text(res.end_date);
-            $('#dominio').text(res.dominio);
-            $('#estatus').text(res.status);
-            $('#note').text(res.note);
-            if (res.file != '') {
-                $('#file').empty();
-                $('#file').append('<a href="' + baseStorage + res.file + '" target="_blank">Ver propuesta</a>');
-            }
-            if (res.file == null){
-                $('#file').empty();
-                $('#file').append('Sin archivo');
-            }
-            $('#subtotal').text(numberFormat2.format(res.subtotal));
-            $('#iva').text(numberFormat2.format(res.iva));
-            $('#total').text(numberFormat2.format(res.grand_total));
-            $('#details').empty();
-            res.items.forEach((value, index) => {
-                $('#details')
-                    .append('<tr>')
-                    .append('<td>' + value.product.name + '</td>')
-                    .append('<td>' + value.details + '</td>')
-                    .append('<td>' + value.quantity + '</td>')
-                    .append('<td>' + numberFormat2.format(value.price) + '</td>')
-                    .append('<td>' + numberFormat2.format(value.total) + '</td>')
-                    .append('</tr>');
-            })
-
-            $('#ContractsModal').modal('show');
-        }
-    });
-
+function addInvoicefile(id) {
+    $('#my-form-invoice #id').val(id);
+    // abrimos modal InvoicesModal
+    $('#InvoicesModal').modal('show');
 }
 
-function deleteRecord(id) {
+function updatePayment(id) {
+    $('#my-form-invoice-payment #id').val(id);
+    // abrimos modal InvoicesModal
+    $('#InvoicesPaymentModal').modal('show');
+}
+
+function changeStatus(status, id) {
+    $('#my-form #status').val(status);
+    $('#my-form #id').val(id);
+
     Swal.fire({
-        title: '¿Está seguro de eliminar este Contrato?',
-        text: "No podra recuperar la información!",
+        title: '¿Esta seguro de cambiar el estado a "' + status + '" de la Factura?',
+        text: "No podra cambiar el estado si es Cancelado o Pagado!",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Si, eliminar!',
+        confirmButtonText: 'Si, cambiar!',
         cancelButtonText: 'Cancelar',
         customClass: {
-        confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
-        cancelButton: 'btn btn-outline-danger waves-effect'
+            confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
+            cancelButton: 'btn btn-outline-danger waves-effect'
         },
         buttonsStyling: false
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href =
-                "/contratos/"+id+"/delete";
+            $('#my-form').submit();
         }
-    })
+    });
 }
+
+function addNumberInvoice() {
+    $('#my-form-invoice #invoice_number').val();
+}
+
+function generarCodigoAleatorioAlfanumerico(longitud) {
+    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let codigo = '';
+    for (let i = 0; i < longitud;  
+   i++) {
+      codigo += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+    }
+    return codigo;
+  }

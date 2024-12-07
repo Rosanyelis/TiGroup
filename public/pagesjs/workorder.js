@@ -5,14 +5,16 @@
 'use strict';
     var dt_ajax_table = $('.datatables-workorder');
     const numberFormat2 = new Intl.NumberFormat('de-DE');
-    const basepath = "http://tigroup.test/assets/images/";
-    const baseStorage = "http://tigroup.test/";
+    const basepath = document.querySelector('html').getAttribute('data-base-url') + "assets/images/";
+    const baseStorage = document.querySelector('html').getAttribute('data-base-url');
     var producto = $('#producto');
     var totalfinal = 0;
     var totalIVA = 0;
     var datosTabla = [];
+    var actividades = [];
     const flatpickrDate = document.querySelector('#flatpickr-date');
     const flatpickrRange = document.querySelector('#flatpickr-range');
+    var i = 1;
 $(function () {
 
     if (dt_ajax_table.length) {
@@ -45,6 +47,7 @@ $(function () {
                 {data: 'total', name: 'total'},
                 {data: 'status', name: 'status'},
                 {data: 'user.name', name: 'user.name'},
+                {data: 'user_asigned.name', name: 'user_asigned.name'},
                 {data: 'actions', name: 'actions', orderable: false, searchable: false},
             ],
             columnDefs: [
@@ -125,6 +128,18 @@ $(function () {
         let totalp = price * quantity;
         let subtotal = totalp;
 
+        if (producto == '' || code == '' || price == '' || quantity == '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Debes ingresar un producto',
+                customClass: {
+                    confirmButton: 'btn btn-primary waves-effect waves-light'
+                    },
+                buttonsStyling: false
+            });
+        }
+
         if (datosTabla.length > 0) {
             let index = datosTabla.findIndex((item) => item.code == code);
 
@@ -162,7 +177,7 @@ $(function () {
 
                 let IDqty = "#quantity-"+code;
                 let IDprice = "#price-"+code;
-                let IDsubtotal = "#subtotal-"+code;
+                let IDsubtotal = "#total-"+code;
 
                 $(IDqty).text(datosTabla[index].quantity);
                 $(IDprice).text(datosTabla[index].price);
@@ -221,19 +236,76 @@ $(function () {
         calcular();
     });
 
+    $('#add_task').on('click', function() {
+        let task = $('#task').val();
+
+        if (task == '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Debes ingresar una tarea',
+                customClass: {
+                    confirmButton: 'btn btn-primary waves-effect waves-light'
+                    },
+                buttonsStyling: false
+            })
+        }
+
+        actividades.push({
+            'code': i,
+            'task': task
+        });
+
+        $("#table_tasks tbody").append(
+        `<tr id="row-`+i+`">
+            <td>`+task+`</td>
+            <td>
+                <button type="button" class="btn btn-danger btn-sm"
+                    id="delete_task" data-code="`+i+`">
+                    <i class="ri-delete-bin-fill"></i>
+                </button>
+            </td>
+        </tr>`);
+
+        $('#task').val('');
+
+        i++;
+    });
+
+    $('#table_tasks tbody').on('click', '#delete_task', function() {
+        let task = $(this).data('code');
+        let id = "#row-" + task;
+
+        actividades = actividades.filter(function(item) {
+            return item.code !== task;
+        });
+
+        $(id).remove();
+
+    });
+
     $('#guardar').on('click', function() {
         if (datosTabla.length == 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
                 text: 'No hay productos agregados, por favor agrega uno',
-                showCancelButton: true,
-                confirmButtonText: 'Si, eliminar!',
-                cancelButtonText: 'Cancelar',
                 customClass: {
-                  confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
-                  cancelButton: 'btn btn-outline-danger waves-effect'
-                },
+                    confirmButton: 'btn btn-primary waves-effect waves-light'
+                    },
+                buttonsStyling: false
+            });
+            return false;
+        }
+
+        if (actividades.length == 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'No hay actividades agregadas, por favor agrega una',
+                customClass: {
+                    confirmButton: 'btn btn-primary waves-effect waves-light'
+                    },
                 buttonsStyling: false
             });
             return false;
@@ -241,6 +313,7 @@ $(function () {
 
         $('#array_products').val(JSON.stringify(datosTabla));
         $('#totalcomplete').val(parseFloat($('#total').text()));
+        $('#array_tasks').val(JSON.stringify(actividades));
         $('#guardar').prop('disabled', true);
         $('#guardar').html('<span class="spinner-border me-1" role="status" aria-hidden="true"></span> Por favor, espere...');
         $('#formWorkorder').submit();
@@ -305,9 +378,16 @@ function viewRecord(id) {
             $('#totals').text(numberFormat2.format(res.total));
             $('#nfactura').text(res.correlativo);
             $('#total2').text(numberFormat2.format(res.total));
+            $('#notes').text(res.notes);
 
             $('#estatus').text(res.status);
             $('#details').empty();
+            res.tasks.forEach((value, index) => {
+                $('#detailsTask')
+                    .append('<tr>')
+                    .append('<td>' + value.task + '</td>')
+                    .append('</tr>');
+            })
             res.items.forEach((value, index) => {
                 $('#details')
                     .append('<tr>')

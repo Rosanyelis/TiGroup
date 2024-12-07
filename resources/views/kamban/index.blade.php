@@ -1,33 +1,47 @@
 @extends('layouts.app')
 @section('title', 'Cotizaciones')
 @section('css')
-    <link rel="stylesheet" href="{{ asset('../../assets/vendor/libs/typeahead-js/typeahead.css') }}" />
-    <link rel="stylesheet" href="{{ asset('../../assets/vendor/libs/jkanban/jkanban.css') }}" />
-    <link rel="stylesheet" href="{{ asset('../../assets/vendor/libs/select2/select2.css') }}" />
-    <link rel="stylesheet" href="{{ asset('../../assets/vendor/libs/flatpickr/flatpickr.css') }}" />
-    <link rel="stylesheet" href="{{ asset('../../assets/vendor/libs/quill/typography.css') }}" />
-    <link rel="stylesheet" href="{{ asset('../../assets/vendor/libs/quill/katex.css') }}" />
-    <link rel="stylesheet" href="{{ asset('../../assets/vendor/libs/quill/editor.css') }}" />
-    <!-- Page CSS -->
-    <link rel="stylesheet" href="{{ asset('../../assets/vendor/css/pages/app-kanban.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/typeahead-js/typeahead.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/jkanban/jkanban.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/flatpickr/flatpickr.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/quill/typography.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/quill/katex.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/quill/editor.css') }}" />
+<!-- Page CSS -->
+<link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/app-kanban.css') }}" />
 @endsection
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
+    <div class="row">
+            <div class="col-12 mb-4">
+                <div class="card ">
+                    <div class="card-header header-elements border-bottom">
+                        <h4 class="card-title mb-0">Mi Tablero</h4>
+                        <div class="card-header-elements ms-auto">
+                            <a href="Javascript:void(0);" class="btn btn-sm btn-primary">Nuevo Espacio de Trabajo</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    </div>
     <div class="app-kanban">
         <!-- Add new board -->
         <div class="row">
+
             <div class="col-12">
-                <form class="kanban-add-new-board">
+                <form class="kanban-add-new-board" >
                     <label class="kanban-add-board-btn" for="kanban-add-board-input">
                         <i class="ri-add-line"></i>
-                        <span class="align-middle">Add new</span>
+                        <span class="align-middle">Nuevo Tablero</span>
                     </label>
                     <input type="text" class="form-control w-px-250 kanban-add-board-input mb-4 d-none"
-                        placeholder="Add Board Title" id="kanban-add-board-input" required />
+                        placeholder="Añadir título del tablero" id="kanban-add-board-input" required />
                     <div class="mb-4 kanban-add-board-input d-none">
-                        <button class="btn btn-primary btn-sm me-3">Add</button>
+                        <button class="btn btn-primary btn-sm me-3">Agregar</button>
                         <button type="button" class="btn btn-outline-secondary btn-sm kanban-add-board-cancel-btn">
-                            Cancel
+                            Cancelar
                         </button>
                     </div>
                 </form>
@@ -133,7 +147,7 @@
                         </div>
                         <div class="media mb-4 d-flex align-items-center">
                             <div class="avatar me-3 flex-shrink-0">
-                                <img src="../../assets/img/avatars/6.png" alt="Avatar" class="rounded-circle" />
+                                <img src="assets/img/avatars/6.png" alt="Avatar" class="rounded-circle" />
                             </div>
                             <div class="media-body ms-1">
                                 <p class="mb-0">
@@ -144,7 +158,7 @@
                         </div>
                         <div class="media mb-4 d-flex align-items-center">
                             <div class="avatar me-3 flex-shrink-0">
-                                <img src="../../assets/img/avatars/2.png" alt="Avatar" class="rounded-circle" />
+                                <img src="assets/img/avatars/2.png" alt="Avatar" class="rounded-circle" />
                             </div>
                             <div class="media-body ms-1">
                                 <p class="mb-0"><span>Martian</span> added moved Charts & Maps task to the done board.
@@ -154,7 +168,7 @@
                         </div>
                         <div class="media mb-4 d-flex align-items-center">
                             <div class="avatar me-3 flex-shrink-0">
-                                <img src="../../assets/img/avatars/1.png" alt="Avatar" class="rounded-circle" />
+                                <img src="assets/img/avatars/1.png" alt="Avatar" class="rounded-circle" />
                             </div>
                             <div class="media-body ms-1">
                                 <p class="mb-0"><span>Barry</span> Commented on App review task.</p>
@@ -184,7 +198,7 @@
                         </div>
                         <div class="media mb-4 d-flex align-items-center">
                             <div class="avatar me-3 flex-shrink-0">
-                                <img src="../../assets/img/avatars/4.png" alt="Avatar" class="rounded-circle" />
+                                <img src="assets/img/avatars/4.png" alt="Avatar" class="rounded-circle" />
                             </div>
                             <div class="media-body ms-1">
                                 <p class="mb-0">
@@ -196,7 +210,7 @@
                         </div>
                         <div class="media mb-4 d-flex align-items-center">
                             <div class="avatar me-3 flex-shrink-0">
-                                <img src="../../assets/img/avatars/1.png" alt="Avatar" class="rounded-circle" />
+                                <img src="assets/img/avatars/1.png" alt="Avatar" class="rounded-circle" />
                             </div>
                             <div class="media-body ms-1">
                                 <p class="mb-0"><span>Barry</span> Complete all the tasks assigned to him.</p>
@@ -214,7 +228,7 @@
                         </div>
                         <div class="media mb-4 d-flex align-items-center">
                             <div class="avatar me-3 flex-shrink-0">
-                                <img src="../../assets/img/avatars/6.png" alt="Avatar" class="rounded-circle" />
+                                <img src="assets/img/avatars/6.png" alt="Avatar" class="rounded-circle" />
                             </div>
                             <div class="media-body ms-1">
                                 <p class="mb-0">
@@ -250,14 +264,14 @@
 @endsection
 
 @section('scripts')
-    <!-- Vendors JS -->
-    <script src="{{ asset('../../assets/vendor/libs/moment/moment.js') }}"></script>
-    <script src="{{ asset('../../assets/vendor/libs/flatpickr/flatpickr.js') }}"></script>
-    <script src="{{ asset('../../assets/vendor/libs/select2/select2.js') }}"></script>
-    <script src="{{ asset('../../assets/vendor/libs/jkanban/jkanban.js') }}"></script>
-    <script src="{{ asset('../../assets/vendor/libs/quill/katex.js') }}"></script>
-    <script src="{{ asset('../../assets/vendor/libs/quill/quill.js') }}"></script>
+<!-- Vendors JS -->
+<script src="{{ asset('assets/vendor/libs/moment/moment.js') }}"></script>
+<script src="{{ asset('assets/vendor/libs/flatpickr/flatpickr.js') }}"></script>
+<script src="{{ asset('assets/vendor/libs/select2/select2.js') }}"></script>
+<script src="{{ asset('assets/vendor/libs/jkanban/jkanban.js') }}"></script>
+<script src="{{ asset('assets/vendor/libs/quill/katex.js') }}"></script>
+<script src="{{ asset('assets/vendor/libs/quill/quill.js') }}"></script>
 
-    <!-- Page JS -->
-    <script src="{{ asset('../../assets/js/app-kanban.js') }}"></script>
+<!-- Page JS -->
+<script src="{{ asset('assets/js/app-kanban.js') }}"></script>
 @endsection

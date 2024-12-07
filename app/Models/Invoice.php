@@ -16,6 +16,20 @@ class Invoice extends Model
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }
 
+    public function contract()
+    {
+        return $this->belongsTo(Contract::class, 'contract_id', 'id');
+    }
+
+    public function contractrenewed()
+    {
+        return $this->belongsTo(ContractsRenewed::class, 'contract_renewed_id', 'id');
+    }
+
+    public function quotation()
+    {
+        return $this->belongsTo( Quotation::class, 'quotation_id', 'id');
+    }
 
     public function items()
     {

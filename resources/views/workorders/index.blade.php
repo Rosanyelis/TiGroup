@@ -18,55 +18,6 @@
     <!-- Ajax Sourced Server-side -->
     <div class="card ">
         <div class="card-header header-elements border-bottom">
-            <!-- <button type="button" class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown"
-                id="dropdownMenuClickable" data-bs-auto-close="false" aria-expanded="false">
-                <i class="ri-filter-fill me-1"></i> Filtros
-            </button>
-            <div class="dropdown-menu  w-px-300 p-6" style="" aria-labelledby="dropdownMenuClickable">
-                <div class="row gy-6 ">
-                    <div class="col-sm-12">
-                        <div class="form-floating form-floating-outline ">
-                            <input type="text" class="form-control flatpickr-input" placeholder="YYYY-MM-DD a YYYY-MM-DD"
-                                id="flatpickr-range" readonly="readonly">
-                            <label for="flatpickr-range">Filtrar por Rango de fecha</label>
-
-                            <input type="hidden" id="startday" name="startday">
-                            <input type="hidden" id="endday" name="endday">
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <div class="form-floating form-floating-outline">
-                            <select id="cliente" name="cliente" class="form-select select2"
-                            placeholder="Selecione un cliente">
-                                <option value="">-- Seleccionar --</option>
-                                @foreach ($clients as $client)
-                                    <option value="{{ $client->id }}">{{ $client->business_name }}</option>
-                                @endforeach
-                            </select>
-                            <label for="code">Filtrar por Cliente</label>
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <div class="form-floating form-floating-outline">
-                            <select id="status" name="status" class="form-select select2"
-                            placeholder="Selecione un estatus">
-                                <option value="">-- Seleccionar --</option>
-                                <option value="Pendiente">Pendiente</option>
-                                <option value="En Proceso">En Proceso</option>
-                                <option value="Completado">Completado</option>
-                                <option value="Cancelado">Cancelado</option>
-                            </select>
-                            <label for="code">Filtrar por Estatus</label>
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <button type="button" id="clearFilter" class="btn btn-sm btn-danger w-100">
-                            <i class="ri-filter-off-fill me-1"></i>
-                            Limpiar Filtros
-                        </button>
-                    </div>
-                </div>
-            </div> -->
 
             <div class="card-header-elements ms-auto">
                 <a href="{{ route('workorder.create') }}" class="btn btn-sm btn-primary">Crear
@@ -85,6 +36,7 @@
                         <th>Total</th>
                         <th>Estatus</th>
                         <th>Creado Por</th>
+                        <th>Asignado a</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -117,6 +69,23 @@
                         </div>
                         <div class="col-md-6">
                             <strong>Estatus :</strong> <span id="estatus"></span>
+                        </div>
+                        <div class="col-md-12">
+                            <strong>Detalles :</strong> <span id="notes"></span>
+                        </div>
+                        <div class="col-md-12 text-center">
+                            <h4>Detalles de Tareas</h4>
+                        </div>
+                        <div class="col-md-12">
+                            <table id="table_tasks_show" class="table table-sm table-striped table-bordered nowrap w-100">
+                                <thead>
+                                    <tr class=" text-uppercase fw-semibold">
+                                        <th>Actividades o Tareas</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="detailsTask" >
+                                </tbody>
+                            </table>
                         </div>
                         <div class="col-md-12 text-center">
                             <h4>Detalles de Servicios</h4>

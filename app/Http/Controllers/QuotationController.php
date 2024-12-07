@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\Customer;
 use App\Models\Quotation;
 use App\Mail\SendQuotation;
+use App\Models\Correlative;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\QuotationItem;
@@ -97,7 +100,7 @@ class QuotationController extends Controller
      */
     public function store(StoreQuotationRequest $request)
     {
-        $customer = Customer::where('name', $request->customer)->first();
+        $customer = Customer::where('business_name', $request->customer)->first();
         $productos = json_decode($request->array_products);
         $file_propuesta = null;
         $correlativoInicial = 1001;
@@ -178,7 +181,7 @@ class QuotationController extends Controller
      */
     public function update(UpdateQuotationRequest $request, $quotation)
     {
-        $customer = Customer::where('name', $request->customer)->first();
+        $customer = Customer::where('business_name', $request->customer)->first();
         $productos = json_decode($request->array_products);
         $file_propuesta = null;
         if ($request->hasFile('file_propuesta')) {
@@ -283,6 +286,9 @@ class QuotationController extends Controller
             'status' => $request->status
         ]);
 
+        // if ($request->status == 'Facturado') {
+        //     $this->createInvoice($request->id);
+        // }
         return redirect()->route('quote.index')->with('success', 'Status de Cotización Actualizada Correctamente');
     }
 
@@ -290,9 +296,92 @@ class QuotationController extends Controller
     {
         $quotation = Quotation::find($request->id);
         $quotation->update([
-            'invoice_number' => $request->invoice_number
+            'invoice_number' => $request->invoice_number,
         ]);
 
+
         return redirect()->route('quote.index')->with('success', 'Número de Factura de Cotización agregada Correctamente');
+    }
+
+    public function correlation()
+    {
+        $nro = Correlative::where('type', 'contract')->first();
+        $correlativoInicial = $nro->correlative_initial;
+        $correlativUltimo = $nro->correlative_last + 1;
+
+        $count = Contract::count();
+        if ($count > 0) {
+            $data = Contract::latest()->first();
+            $nroOrden = $correlativUltimo;
+            $nro->update([
+                'correlative_last' => $correlativUltimo,
+            ]);
+        } else {
+            $nroOrden = $correlativoInicial;
+        }
+        return $nroOrden;
+
+    }
+
+    public function correlationInvoice()
+    {
+        $nro = Correlative::where('type', 'Invoice')->first();
+        $correlativoInicial = $nro->correlative_initial;
+        $correlativUltimo = $nro->correlative_last + 1;
+
+        $count = Invoice::count();
+
+        if ($count > 0) {
+            $data = Invoice::latest()->first();
+            $nroOrden = $data->correlativo + 1;
+            $nro->update([
+                'correlative_last' => $correlativUltimo,
+            ]);
+        } else {
+            $nroOrden = $correlativoInicial;
+        }
+
+        return $nroOrden;
+    }
+
+    public function saveFile($archivo)
+    {
+        if ($archivo != null) {
+            $uploadPath = public_path('/storage/cotizaciones/');
+            $file = $archivo;
+            $extension = $file->getClientOriginalExtension();
+            $uuid = Str::uuid(4);
+            $fileName = $uuid . '.' . $extension;
+            $file->move($uploadPath, $fileName);
+            $url = '/storage/cotizaciones/'.$fileName;
+            $file_propuesta = $url;
+        } else {
+            $file_propuesta = null;
+        }
+
+        return $file_propuesta;
+    }
+
+    public function createInvoice($quotation)
+    {
+        $data = Quotation::with('items', 'customer', 'items.product')->find($quotation);
+
+        $invoice_date = Carbon::now()->format('Y-m-d');
+        $invoice = Invoice::create([
+            'customer_id' => $data->customer_id,
+            'quotation_id' => $data->id,
+            'user_id' => auth()->user()->id,
+            'correlativo' => $this->correlationInvoice(),
+            'type' => 'Quotation',
+            'motive' => 'Cotizacion',
+            'net_amount' => $data->subtotal,
+            'iva' => $data->iva,
+            'total' => $data->grand_total,
+            'invoice_date' => $invoice_date,
+            'due_date' => Carbon::parse($invoice_date)->addDays(5),
+            'status' => 'Facturado',
+        ]);
+
+        return $invoice;
     }
 }

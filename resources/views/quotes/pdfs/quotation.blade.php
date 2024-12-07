@@ -10,7 +10,7 @@
         <thead>
             <tr>
                 <th colspan="4" style="text-align: left; ">
-                    <img src="{{ asset('assets/img/TIGroup.png') }}" alt="logo" height="70">
+                    <img src="{{ public_path('assets/img/tigroup.png') }}" alt="logo" height="70">
                     <h5>
                         Doctor Manuel Barro Borgoño 138 <br>
                         Providencia,  Santiago <br>
@@ -48,12 +48,9 @@
             </tr>
         </tbody>
     </table>
-    <table border="1" cellspacing="0" style="border-radius: 5px; width: 100%; margin-top: 40px; border-collapse: collapse; font-family: Arial, Helvetica, sans-serif">
+    <table  cellspacing="0" cellpadding="2" style="border-radius: 5px; width: 100%; margin-top: 40px; border-collapse: collapse; font-family: Arial, Helvetica, sans-serif">
         <thead>
-            <tr>
-                <th colspan="8" style="text-align: center; font-weight: bold">Propuesta</th>
-            </tr>
-            <tr>
+            <tr style="text-align: center; font-size: 18px; border-bottom: 1px solid #0483b2">
                 <th colspan="2">Producto</th>
                 <th colspan="2">Cantidad</th>
                 <th colspan="2">Precio Unit.</th>
@@ -66,11 +63,11 @@
                     <td colspan="2">{{ $item->product_name }}</td>
                     <td colspan="2">{{ $item->quantity }}</td>
                     <td colspan="2">{{ number_format($item->price + $item->margen, 0, ',', '.') }}</td>
-                    <td colspan="2">{{  number_format($item->quantity * ($item->price + $item->margen), 0, ',', '.') }}</td>
+                    <td colspan="2">{{ number_format($item->quantity * ($item->price + $item->margen), 0, ',', '.') }}</td>
                 </tr>
             @endforeach
         </tbody>
-        <tfoot>
+        <tfoot style="border-top: 1px solid #0483b2; padding-top: 20px">
             <tr>
                 <td colspan="6" style="text-align: right; font-weight: bold">SubTotal:</td>
                 <td colspan="2" style="text-align: center;">{{ number_format($quotation->subtotal, 0, ',', '.') }}</td>
@@ -81,9 +78,18 @@
             </tr>
             <tr>
                 <td colspan="6" style="text-align: right; font-weight: bold">Total:</td>
-                <td colspan="2" style="text-align: center;">{{ number_format($quotation->grand_total, 0, ',', '.') }}</td>
+                <td colspan="2" style="text-align: center;">$ {{ number_format($quotation->grand_total, 0, ',', '.') }}</td>
             </tr>
         </tfoot>
+    </table>
+    <table  cellspacing="0" cellpadding="2" style="border-radius: 5px; width: 100%; margin-top: 40px; border-collapse: collapse; font-family: Arial, Helvetica, sans-serif">
+        <tbody>
+            <tr>
+                <td colspan="4" style="font-size: 14px;">
+                    <strong>Notas:</strong> {{ $quotation->note }}
+                </td>
+            </tr>
+        </tbody>
     </table>
     <div style="position: fixed; bottom: 0; width: 100%; border-top: 1px solid #0483b2">
         <div style="text-align: center;font-family: Arial, Helvetica, sans-serif">

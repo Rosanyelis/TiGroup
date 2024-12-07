@@ -39,6 +39,7 @@
                         <th>Producto</th>
                         <th>Categoría</th>
                         <th>Tipo</th>
+                        <th>Stock</th>
                         <th>Costo</th>
                         <th>Precio</th>
                         <th>Acciones</th>

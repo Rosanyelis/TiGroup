@@ -6,8 +6,12 @@ use App\Models\Product;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use App\Models\PurchaseOrder;
+use App\Mail\SendPurchaseOrder;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\PurchaseOrderItem;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Yajra\DataTables\Facades\DataTables;
 use App\Http\Requests\StorePurchaseOrderRequest;
 use App\Http\Requests\UpdatePurchaseOrderRequest;
@@ -173,11 +177,38 @@ class PurchaseOrderController extends Controller
         return redirect()->route('purchaseorder.index')->with('success', 'Orden de Compra Eliminada Exitosamente');
     }
 
-    public function purchasepdf($purchase)
+    public function generatepdf($purchase)
     {
-        $purchase = Purchase::with('purchaseItems', 'purchaseItems.product', 'supplier')->find($purchase);
-        return Pdf::loadView('pdfs.purchase', compact('purchase'))
-                ->stream(''.config('app.name', 'Laravel').' - Compra.pdf');
+        $purchase = PurchaseOrder::with('items', 'items.product', 'supplier')->find($purchase);
+        return Pdf::loadView('purchasesorders.pdfs.purchaseorderpdf', compact('purchase'))
+                ->stream(''.config('app.name', 'Laravel').' - Orden de Compra.pdf');
     }
 
+    public function sendEmailPurchaseOrderpdf($purchaseorder)
+    {
+        $purchase = PurchaseOrder::with('supplier')->find($purchaseorder);
+
+        if ($purchase->supplier->email == null) {
+            return redirect()->route('purchaseorder.index')->with('error', 'El Proveedor no posee correo para enviar la Orden de Compra');
+        }
+
+        $publicpath = public_path('storage/ordenescompra/');
+        $namepdf = config('app.name', 'Laravel').' - Orden de Compra - '.$purchase->supplier->email.' - '.date('Y-m-d').'.pdf';
+        $urlpdf = $publicpath.$namepdf;
+
+
+        $pdf = Pdf::loadView('purchasesorders.pdfs.purchaseorderpdf', compact('purchase'))
+                ->save($urlpdf);
+
+        try {
+            Mail::to($purchase->supplier->email)->send(new SendPurchaseOrder($purchase, $urlpdf, $namepdf));
+
+            return redirect()->route('purchaseorder.index')->with('success', 'Orden de Compra Enviada Exitosamente');
+        } catch (\Throwable $th) {
+            Log::error("error al enviar orden de trabajo: ".$th->getMessage());
+
+            return redirect()->route('purchaseorder.index')->with('error', 'Error al enviar la Orden de Compra, verifique su correo');
+        }
+
+    }
 }

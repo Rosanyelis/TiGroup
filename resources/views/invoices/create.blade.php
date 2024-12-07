@@ -24,17 +24,17 @@
                             <div class="row">
                                 <div class="mb-6 col-md-4">
                                     <div class="form-floating form-floating-outline">
-                                        <select id="customer" name="customer" class="form-select select2"
+                                        <select id="customer_id" name="customer_id" class="form-select select2"
                                         placeholder="Selecione una cliente">
                                             <option value="">-- Seleccionar --</option>
                                             @foreach ($customers as $item)
-                                            <option value="{{ $item->business_name }}" {{ old('customer') == $item->business_name ? 'selected' : '' }}>{{ $item->business_name }}</option>
+                                            <option value="{{ $item->id }}" {{ old('customer_id') == $item->id ? 'selected' : '' }}>{{ $item->business_name }}</option>
                                             @endforeach
                                         </select>
                                         <label for="code">Cliente</label>
-                                        @if($errors->has('customer'))
+                                        @if($errors->has('customer_id'))
                                         <div class="invalid-feedback">
-                                            {{ $errors->first('customer') }}
+                                            {{ $errors->first('customer_id') }}
                                         </div>
                                         @endif
                                     </div>
@@ -44,12 +44,12 @@
                                         <input type="text"
                                             class="form-control flatpickr-input"
                                             placeholder="DD-MM-YYYY"
-                                            name="fecha_factura"
+                                            name="invoice_date"
                                             id="flatpickr-date" value="">
-                                        <label for="code">fecha factura</label>
-                                        @if($errors->has('fecha_factura'))
+                                        <label for="code">fecha de Emisión de factura</label>
+                                        @if($errors->has('invoice_date'))
                                         <div class="invalid-feedback">
-                                            {{ $errors->first('fecha_factura') }}
+                                            {{ $errors->first('invoice_date') }}
                                         </div>
                                         @endif
                                     </div>
@@ -65,28 +65,83 @@
                                         @endif
                                     </div>
                                 </div>
-
-
                                 <div class="mb-6 col-md-4">
                                     <div class="form-floating form-floating-outline">
                                         <input
-                                            type="number"
-                                            id="monto_neto"
-                                            name="monto_neto"
-                                            class="form-control @if($errors->has('monto_neto')) is-invalid @endif"
-                                            placeholder="Ingrese monto neto factura"
-                                            value="{{ old('monto_neto') }}"
+                                            type="text"
+                                            id="motive"
+                                            name="motive"
+                                            class="form-control @if($errors->has('motive')) is-invalid @endif"
+                                            placeholder="Ingrese motivo de factura"
+                                            value="{{ old('motive') }}"
                                         />
-                                        <label for="code">Monto Neto de Factura</label>
-                                        @if($errors->has('monto_neto'))
+                                        <label for="code">Motivo</label>
+                                        @if($errors->has('motive'))
                                         <div class="invalid-feedback">
-                                            {{ $errors->first('monto_neto') }}
+                                            {{ $errors->first('motive') }}
                                         </div>
                                         @endif
                                     </div>
                                 </div>
+                                <div class="mb-6 col-md-4">
+                                    <div class="form-floating form-floating-outline">
+                                        <select id="payment_form" name="payment_form" class="form-select select2"
+                                        placeholder="Selecione la Forma de Pago">
+                                            <option value="">-- Seleccionar --</option>
+                                            <option value="Sin Definir">Sin Definir</option>
+                                            <option value="Efectivo">Efectivo</option>
+                                            <option value="Transferencia">Transferencia</option>
+                                            <option value="Cheque">Cheque</option>
+                                            <option value="WebPay">WebPay</option>
+                                        </select>
+                                        <label for="code">Forma de Pago</label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-6 col-md-4">
+                                    <div class="form-floating form-floating-outline">
+                                        <select id="status" name="status" class="form-select select2"
+                                        placeholder="Selecione la Estatus">
+                                            <option value="">-- Seleccionar --</option>
+                                            <option value="Por Facturar">Por Facturar</option>
+                                            <option value="Facturado">Facturado</option>
+                                            <option value="Pagado">Pagado</option>
+                                            <option value="Vencido">Vencido</option>
+                                            <option value="Anulado">Anulado</option>
+                                        </select>
+                                        <label for="code">Estatus</label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-6 col-md-4">
+                                    <div class="form-floating form-floating-outline">
+                                        <select id="confirm_sale" name="confirm_sale" class="form-select">
+                                            <option value="">-- Seleccionar --</option>
+                                            <option value="Si">Si</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                        <label for="code">¿Registrar venta de la factura?</label>
+                                    </div>
+                                </div>
 
                                 <div class="w-100"></div>
+
+                                <hr>
+
+                                <div class="mb-6 col-md-4">
+                                    <div class="form-floating form-floating-outline">
+                                        <input
+                                            type="text"
+                                            id="product_name"
+                                            name="product_name"
+                                            class="form-control @if($errors->has('product_name')) is-invalid @endif"
+                                            placeholder="Ingrese Producto o Servicio "
+                                            value="{{ old('product_name') }}"
+                                        />
+                                        <label for="code">Producto o Servicio</label>
+                                    </div>
+                                    <input type="hidden" name="product_name" id="product_name">
+                                </div>
 
                                 <div class="mb-6 col-md-4">
                                     <div class="form-floating form-floating-outline">
@@ -95,10 +150,10 @@
                                             id="description"
                                             name="description"
                                             class="form-control @if($errors->has('description')) is-invalid @endif"
-                                            placeholder="Ingrese Descripción para el detalle de factura"
+                                            placeholder="Ingrese Detalle de factura"
                                             value="{{ old('description') }}"
                                         />
-                                        <label for="code">Descripción de Producto</label>
+                                        <label for="code">Detalle del servicio</label>
                                     </div>
                                     <input type="hidden" name="product_name" id="product_name">
                                 </div>
@@ -107,8 +162,8 @@
                                     <div class="form-floating form-floating-outline">
                                         <input
                                             type="number"
-                                            id="priceCost"
-                                            name="priceCost"
+                                            id="precio"
+                                            name="precio"
                                             class="form-control"
                                             placeholder=""
                                         />
@@ -168,7 +223,8 @@
                                         <table class="table" id="table_products">
                                             <thead>
                                                 <tr>
-                                                    <th>Descripción</th>
+                                                    <th>Producto o Servicio</th>
+                                                    <th>Detalles</th>
                                                     <th>Cantidad</th>
                                                     <th>Precio</th>
                                                     <th>Impuesto Adicional</th>
@@ -178,6 +234,24 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="tbody_products"></tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="6" class="text-end">Monto Neto</td>
+                                                    <td colspan="2" ><span id="monto_neto">0</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="6" class="text-end">IVA (19%)</td>
+                                                    <td colspan="2" ><span id="iva">0</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="6" class="text-end">Impuesto Adicional</td>
+                                                    <td colspan="2" ><span id="impuesto_adicional">0</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="6" class="text-end">Total</td>
+                                                    <td colspan="2" ><span id="total">0</span></td>
+                                                </tr>
+                                            </tfoot>
                                         </table>
                                     </div>
                                 </div>
@@ -187,6 +261,7 @@
                                     <input type="hidden" name="subtotal" id="subtotalcomplete">
                                     <input type="hidden" name="total" id="totalcomplete">
                                     <input type="hidden" name="iva" id="ivacomplete">
+                                    <input type="hidden" name="impuesto_adicional" id="impuestocomplete">
                                     <input type="hidden" name="array_products" id="array_products">
 
                                     <button type="submit" class="btn btn-primary float-end"

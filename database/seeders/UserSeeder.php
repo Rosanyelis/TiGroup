@@ -21,9 +21,15 @@ class UserSeeder extends Seeder
             'password' => Hash::make('admin'),
         ]);
         User::factory()->create([
-            'rol_id' => 1,
-            'name' => 'Administrador',
-            'email' => 'administrador@gmail.com',
+            'rol_id' => 2,
+            'name' => 'juan@tigroup.cl',
+            'email' => 'juan@tigroup.cl',
+            'password' => Hash::make('admin'),
+        ]);
+        User::factory()->create([
+            'rol_id' => 3,
+            'name' => 'andres@tigroup.cl',
+            'email' => 'andres@tigroup.cl',
             'password' => Hash::make('admin'),
         ]);
     }

@@ -19,6 +19,8 @@ return new class extends Migration
             $table->text('note')->nullable();
             $table->decimal('total', 10, 0);
             $table->string('files')->nullable();
+            $table->date('date_reception')->nullable();
+            $table->date('date_received')->nullable();
             $table->enum('received', ['1', '0'])->default('1');
             $table->timestamps();
         });

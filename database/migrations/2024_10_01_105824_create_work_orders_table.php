@@ -14,11 +14,12 @@ return new class extends Migration
         Schema::create('work_orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_assigned_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             $table->text('correlativo'); // empezar en 1001
             $table->decimal('total', 10, 0);
             $table->enum('status', ['Pendiente', 'En Proceso', 'Completado', 'Cancelado'])->default('Pendiente');
-            $table->timestamps();
+            $table->enum('payment_status', ['Por facturar', 'Facturado', 'Pagado', 'Anulado'])->default('Por facturar');            $table->timestamps();
         });
     }
 

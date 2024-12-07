@@ -79,9 +79,9 @@
       "<div class='dropdown'>" +
       "<i class='dropdown-toggle ri-more-2-line ri-20px cursor-pointer' id='board-dropdown' data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false'></i>" +
       "<div class='dropdown-menu dropdown-menu-end' aria-labelledby='board-dropdown'>" +
-      "<a class='dropdown-item delete-board' href='javascript:void(0)'> <i class='ri-delete-bin-7-line'></i> <span class='align-middle'>Delete</span></a>" +
-      "<a class='dropdown-item' href='javascript:void(0)'><i class='ri-edit-2-fill'></i> <span class='align-middle'>Rename</span></a>" +
-      "<a class='dropdown-item' href='javascript:void(0)'><i class='ri-archive-line'></i> <span class='align-middle'>Archive</span></a>" +
+      "<a class='dropdown-item delete-board' href='javascript:void(0)'> <i class='ri-delete-bin-7-line'></i> <span class='align-middle'>Eliminar</span></a>" +
+      "<a class='dropdown-item' href='javascript:void(0)'><i class='ri-edit-2-fill'></i> <span class='align-middle'>Renombrar</span></a>" +
+      "<a class='dropdown-item' href='javascript:void(0)'><i class='ri-archive-line'></i> <span class='align-middle'>Archivar</span></a>" +
       '</div>' +
       '</div>'
     );
@@ -179,10 +179,10 @@
     boards: boards,
     dragBoards: true,
     addItemButton: true,
-    buttonContent: '+ Add Item',
+    buttonContent: '+ Agregar Tarea',
     itemAddOptions: {
-      enabled: true, // add a button to board for easy item creation
-      content: '+ Add New Item', // text or html content of the board button
+      enabled: true, // añadir un botón al tablero para facilitar la creación de artículos
+      content: '+ Nueva Tarea', // texto o contenido html del botón del tablón
       class: 'kanban-title-button btn btn-default btn-md shadow-none text-capitalize fw-normal text-heading', // default class of the button
       footer: false // position the button on footer
     },
@@ -228,11 +228,11 @@
       addNew.setAttribute('class', 'new-item-form');
       addNew.innerHTML =
         '<div class="mb-4">' +
-        '<textarea class="form-control add-new-item" rows="2" placeholder="Add Content" autofocus required></textarea>' +
+        '<textarea class="form-control add-new-item" rows="2" placeholder="Titulo de Tarea" autofocus required></textarea>' +
         '</div>' +
         '<div class="mb-4">' +
-        '<button type="submit" class="btn btn-primary btn-sm me-4">Add</button>' +
-        '<button type="button" class="btn btn-outline-secondary btn-sm cancel-add-item">Cancel</button>' +
+        '<button type="submit" class="btn btn-primary btn-sm me-4">Agregar</button>' +
+        '<button type="button" class="btn btn-outline-secondary btn-sm cancel-add-item">Cancelar</button>' +
         '</div>';
       kanban.addForm(boardId, addNew);
 
@@ -347,34 +347,35 @@
     });
   }
 
-  // Toggle add new input and actions add-new-btn
+  // Alternar añadir nueva entrada y acciones add-new-btn
   if (kanbanAddBoardBtn) {
     kanbanAddBoardBtn.addEventListener('click', () => {
       kanbanAddNewInput.forEach(el => {
+        console.log(el.value);
         el.value = '';
         el.classList.toggle('d-none');
       });
     });
   }
 
-  // Render add new inline with boards
+  // Renderizado añadir nuevo en línea con tablas
   if (kanbanContainer) {
     kanbanContainer.appendChild(kanbanAddNewBoard);
   }
 
-  // Makes kanban title editable for rendered boards
+  // Hace editable el título del Kanban para los tableros renderizados
   if (kanbanTitleBoard) {
     kanbanTitleBoard.forEach(function (elem) {
       elem.addEventListener('mouseenter', function () {
         this.contentEditable = 'true';
       });
 
-      // Appends delete icon with title
+      // Añade el icono de eliminación al título
       elem.insertAdjacentHTML('afterend', renderBoardDropdown());
     });
   }
 
-  // To delete Board for rendered boards
+  // Para suprimir el tablero para tableros renderizados
   const deleteBoards = [].slice.call(document.querySelectorAll('.delete-board'));
   if (deleteBoards) {
     deleteBoards.forEach(function (elem) {
@@ -385,7 +386,7 @@
     });
   }
 
-  // Delete task for rendered boards
+  // Borrar tarea para tableros renderizados
   const deleteTask = [].slice.call(document.querySelectorAll('.delete-task'));
   if (deleteTask) {
     deleteTask.forEach(function (e) {
@@ -396,7 +397,7 @@
     });
   }
 
-  // Cancel btn add new input
+  // Cancelar btn añadir nueva entrada
   const cancelAddNew = document.querySelector('.kanban-add-board-cancel-btn');
   if (cancelAddNew) {
     cancelAddNew.addEventListener('click', function () {
@@ -406,33 +407,36 @@
     });
   }
 
-  // Add new board
+  // Añadir nuevo tablero
   if (kanbanAddNewBoard) {
     kanbanAddNewBoard.addEventListener('submit', function (e) {
       e.preventDefault();
       const thisEle = this,
         value = thisEle.querySelector('.form-control').value,
         id = value.replace(/\s+/g, '-').toLowerCase();
-      kanban.addBoards([
-        {
-          id: id,
-          title: value
-        }
-      ]);
 
-      // Adds delete board option to new board, delete new boards & updates data-order
+        console.log(value);
+
+    //   kanban.addBoards([
+    //     {
+    //       id: id,
+    //       title: value
+    //     }
+    //   ]);
+
+      // Añade la opción de borrar tablero al nuevo tablero, borra nuevos tableros y actualiza el orden de los datos.
       const kanbanBoardLastChild = document.querySelectorAll('.kanban-board:last-child')[0];
       if (kanbanBoardLastChild) {
         const header = kanbanBoardLastChild.querySelector('.kanban-title-board');
         header.insertAdjacentHTML('afterend', renderBoardDropdown());
 
-        // To make newly added boards title editable
+        // Para que el título de los tableros recién añadidos sea editable
         kanbanBoardLastChild.querySelector('.kanban-title-board').addEventListener('mouseenter', function () {
           this.contentEditable = 'true';
         });
       }
 
-      // Add delete event to delete newly added boards
+      // Añadir evento de borrado para borrar tableros recién añadidos
       const deleteNewBoards = kanbanBoardLastChild.querySelector('.delete-board');
       if (deleteNewBoards) {
         deleteNewBoards.addEventListener('click', function () {
@@ -441,21 +445,21 @@
         });
       }
 
-      // Remove current append new add new form
+      // Eliminar actual añadir nuevo añadir nuevo formulario
       if (kanbanAddNewInput) {
         kanbanAddNewInput.forEach(el => {
           el.classList.add('d-none');
         });
       }
 
-      // To place inline add new btn after clicking add btn
+      // Para colocar en línea añadir nuevo btn después de hacer clic en añadir btn
       if (kanbanContainer) {
         kanbanContainer.appendChild(kanbanAddNewBoard);
       }
     });
   }
 
-  // Clear comment editor on close
+  // Borrar editor de comentarios al cerrar
   kanbanSidebar.addEventListener('hidden.bs.offcanvas', function () {
     kanbanSidebar.querySelector('.ql-editor').firstElementChild.innerHTML = '';
   });

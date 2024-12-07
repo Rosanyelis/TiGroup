@@ -49,6 +49,10 @@ $(function () {
                     name: 'type'
                 },
                 {
+                    data: 'quantity',
+                    name: 'quantity'
+                },
+                {
                     data: 'cost',
                     name: 'cost'
                 },
@@ -64,7 +68,7 @@ $(function () {
                 },
             ],
             columnDefs: [{
-                targets: [4,5],
+                targets: [5,6],
                 render: function (data) {
                     return '$ ' + numberFormat2.format(data);
                 }
@@ -82,7 +86,13 @@ $(function () {
         }else {
             $('#quantity').prop('disabled', false);
         }
-    })
+    });
+
+    if ($('#type').val() == 'Servicios') {
+        $('#quantity').prop('disabled', true);
+    }else {
+        $('#quantity').prop('disabled', false);
+    }
 });
 function deleteRecord(id) {
     Swal.fire({

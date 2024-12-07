@@ -137,7 +137,7 @@ table, td { color: #000000; } @media (max-width: 480px) { #u_content_text_3 .v-c
       <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:10px 45px;font-family:'Raleway',sans-serif;" align="left">
 
   <div class="v-font-size" style="font-size: 14px; line-height: 140%; text-align: justify; word-wrap: break-word;">
-    <p style="line-height: 140%;">Saludos estimado(a) {{ $quotation->customer_name }}, en el presente correo le adjuntamos la cotización solicitada.</p>
+    <p style="line-height: 140%;">Saludos estimado(a) {{ $workorder->customer->business_name }}, en el presente correo le adjuntamos la orden de trabajo solicitada.</p>
   </div>
 
       </td>

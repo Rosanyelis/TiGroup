@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('kambans', function (Blueprint $table) {
+        Schema::create('board_item_files', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('board_item_id')->constrained('board_items')->onDelete('cascade')->onUpdate('cascade');
+            $table->string('file');
             $table->timestamps();
         });
     }
@@ -22,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('kambans');
+        Schema::dropIfExists('board_item_files');
     }
 };

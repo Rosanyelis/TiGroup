@@ -19,96 +19,158 @@
         </div>
 
         <div class="card-datatable text-nowrap">
-            <table class="datatables-contract table table-sm">
+            <table class="datatables-invoice table table-sm">
                 <thead>
                     <tr>
-                        <th>Nº Factura</th>
+                        <th>Nº Fac.</th>
                         <th>Cliente</th>
-                        <th>Fecha Factura</th>
-                        <th>Monto Neto</th>
-                        <th>Pdf Factura</th>
+                        <th>Motivo</th>
+                        <th>Fecha Venc.</th>
+                        <th>Total</th>
+                        <th>Forma de Pago</th>
                         <th>Estado</th>
-                        <th style="width: 10px"></th>
                     </tr>
                 </thead>
             </table>
         </div>
     </div>
     <!--/ Ajax Sourced Server-side -->
-    <!-- Modal ver cotización-->
-    <div class="modal fade" id="InvoicesModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal fade" id="AddNumberInvoiceModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalCenterTitle">Ver Factura Nº <span id="correlativo"></span> </h5>
+                    <h5 class="modal-title" id="modalCenterTitle">Cambiar Forma de Pago </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <form action="{{ route('invoice.changeFormPayment') }}" method="POST" enctype="multipart/form-data" id="my-form-invoice-payment">
+                    @csrf
+                    <input type="hidden" id="id" name="id">
                 <div class="modal-body">
                     <div class="row g-3">
-                        <div class="col-md-4">
-                            <strong>Razón Social o Cliente :</strong><br>
-                            <span id="bussines_name"></span>
-                        </div>
-                        <div class="col-md-4">
-                            <strong>Fecha de Factura:</strong><br>
-                            <span id="fecha_factura"></span>
-                        </div>
-
-
-                        <div class="col-md-4">
-                            <strong>Forma de Pago:</strong><br>
-                            <span id="forma_pago"></span>
-                        </div>
-
-                        <div class="col-md-4">
-                            <strong>Estatus:</strong><br>
-                            <span id="estatus"></span>
+                        <div class=" col-md-12">
+                            <div class="form-floating form-floating-outline">
+                                <select id="payment_form" name="payment_form" class="form-select select2"
+                                placeholder="Selecione la Forma de Pago">
+                                    <option value="">-- Seleccionar --</option>
+                                    <option value="Efectivo">Efectivo</option>
+                                    <option value="Transferencia">Transferencia</option>
+                                    <option value="Cheque">Cheque</option>
+                                    <option value="WebPay">WebPay</option>
+                                </select>
+                                <label for="code">Forma de Pago</label>
+                            </div>
                         </div>
 
-                        <div class="col-md-12 text-center">
-                            <h4>Detalles de Factura</h4>
-                        </div>
-
-                        <div class="col-md-12">
-                            <table class="table table-sm table-striped table-bordered nowrap w-100">
-                                <thead>
-                                    <tr class="text-center text-uppercase fw-semibold">
-                                        <th>Codigo</th>
-                                        <th>Descripción</th>
-                                        <th>Cantidad</th>
-                                        <th>Impuesto Adicional</th>
-                                        <th>Descuento</th>
-                                        <th>Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="details" class="text-center">
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colspan="5" class="text-end fw-semibold">Monto Neto</td>
-                                        <td id="monto_neto" class="text-center fw-semibold"></td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="5" class="text-end fw-semibold">IVA (% 19)</td>
-                                        <td id="iva" class="text-center fw-semibold"></td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="5" class="text-end fw-semibold">Impuesto Adicional</td>
-                                        <td id="iva" class="text-center fw-semibold"></td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="5" class="text-end fw-semibold">Total</td>
-                                        <td id="total" class="text-center fw-semibold"></td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
                     </div>
                 </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="bx bx-x d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">Cancelar</span>
+                    </button>
+                    <button type="submit" class="btn btn-primary ml-1">
+                        <i class="bx bx-check d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">Guardar</span>
+                    </button>
+                </div>
+                </form>
             </div>
         </div>
     </div>
-    <!--/ Modal ver cotización-->
+    <!-- Modal agregar numero de factura y cargar archivo -->
+    <div class="modal fade" id="InvoicesModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCenterTitle">Agregar Número de Factura Electronica <span id="correlativo"></span> </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('invoice.updateInvoiceFile') }}" method="POST" enctype="multipart/form-data" id="my-form-invoice">
+                    @csrf
+                    <input type="hidden" id="id" name="id">
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class=" col-md-12">
+                            <div class="form-floating form-floating-outline">
+                                <input
+                                    type="text"
+                                    id="n_factura"
+                                    name="n_factura"
+                                    class="form-control @if($errors->has('n_factura')) is-invalid @endif"
+                                    placeholder="Ingrese Nº de factura Electronica"
+                                    value="{{ old('n_factura') }}"
+                                />
+                                <label for="code">Nº de factura Electronica</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="bx bx-x d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">Cancelar</span>
+                    </button>
+                    <button type="submit" class="btn btn-primary ml-1">
+                        <i class="bx bx-check d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">Guardar</span>
+                    </button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--/ Modal agregar numero de factura y cargar archivo -->
+    <!-- Modal Actualizar forma de pago-->
+    <div class="modal fade" id="InvoicesPaymentModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCenterTitle">Cambiar Forma de Pago </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('invoice.changeFormPayment') }}" method="POST" enctype="multipart/form-data" id="my-form-invoice-payment">
+                    @csrf
+                    <input type="hidden" id="id" name="id">
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class=" col-md-12">
+                            <div class="form-floating form-floating-outline">
+                                <select id="payment_form" name="payment_form" class="form-select select2"
+                                placeholder="Selecione la Forma de Pago">
+                                    <option value="">-- Seleccionar --</option>
+                                    <option value="Efectivo">Efectivo</option>
+                                    <option value="Transferencia">Transferencia</option>
+                                    <option value="Cheque">Cheque</option>
+                                    <option value="WebPay">WebPay</option>
+                                </select>
+                                <label for="code">Forma de Pago</label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="bx bx-x d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">Cancelar</span>
+                    </button>
+                    <button type="submit" class="btn btn-primary ml-1">
+                        <i class="bx bx-check d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">Guardar</span>
+                    </button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--/ Modal Actualizar forma de pago-->
+    <!-- Modal cambiar estado-->
+    <form id="my-form" action="{{ route('invoice.changeStatus') }}" method="POST">
+        @csrf
+        <input type="hidden" id="id" name="id">
+        <input type="hidden" id="status" name="status">
+    </form>
+    <!--/ Modal cambiar estado-->
 </div>
 @endsection
 
@@ -116,5 +178,5 @@
     <script src="{{ asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/moment/moment.js') }}"></script>
     <!-- Page JS -->
-    <script src="{{ asset('pagesjs/contract.js') }}"></script>
+    <script src="{{ asset('pagesjs/invoice.js') }}"></script>
 @endsection

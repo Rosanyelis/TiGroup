@@ -16,6 +16,11 @@ class WorkOrder extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    public function user_asigned()
+    {
+        return $this->belongsTo(User::class, 'user_assigned_id', 'id');
+    }
+
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
@@ -26,5 +31,9 @@ class WorkOrder extends Model
         return $this->hasMany(WorkOrderItem::class, 'work_order_id', 'id');
     }
 
+    public function tasks()
+    {
+        return $this->hasMany(WorkOrderTask::class, 'work_order_id', 'id');
+    }
 
 }

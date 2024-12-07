@@ -178,3 +178,6 @@
         </div>
     </div>
 @endsection
+@section('scripts')
+<script src="{{ asset('pagesjs/supplier.js') }}"></script>
+@endsection

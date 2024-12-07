@@ -202,7 +202,7 @@
     <!--/ Modal ver cotización-->
 
     <!-- Modal cambiar estado-->
-    <form id="my-form" action="{{ route('quote.cambiarStatus') }}" method="POST">
+    <form id="my-form" action="{{ route('purchase.cambiarStatus') }}" method="POST">
         @csrf
         <input type="hidden" id="id" name="id">
         <input type="hidden" id="status" name="status">

@@ -16,5 +16,13 @@
             <i class="ri-delete-bin-fill ri-20px"></i>
             Eliminar Orden de Compra
         </a>
+        <a class="dropdown-item text-warning " href="{{ route('purchaseorder.generatepdf', $data->id) }}"
+            target="_blank">
+            <i class="ri-file-pdf-2-line ri-20px"></i> Orden de Compra PDF
+        </a>
+        <a class="dropdown-item text-success" href="{{ route('purchaseorder.sendEmailPurchaseOrderpdf', $data->id) }}" >
+            <i class="ri-mail-send-line ri-20px"></i>
+            Enviar Orden de Compra
+        </a>
 </div>
 

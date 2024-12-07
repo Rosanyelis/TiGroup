@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +20,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $tasks = \App\Models\TodoList::where('fecha_fin', '<=', date('Y-m-d'))->get();
+
+        View::share('notifications', $tasks);
     }
 }

@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\KambanController;
 use App\Http\Controllers\ExpenseController;
@@ -16,20 +18,30 @@ use App\Http\Controllers\TodoListController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\WorkOrderController;
 use App\Http\Controllers\PurchaseOrderController;
+use App\Http\Controllers\ContractsRenewedController;
 
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [HomeController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    # Data dashboard
+    Route::get('/sales-overview', [HomeController::class, 'saleoverview'])->name('dashboard.saleoverview');
+    Route::get('/services-due', [HomeController::class, 'services'])->name('dashboard.services');
+    Route::get('/quantity-contract', [HomeController::class, 'contractType'])->name('dashboard.contractType');
+    Route::get('/quantity-hosting', [HomeController::class, 'hostingType'])->name('dashboard.hostingType');
+    Route::get('/sales-years', [HomeController::class, 'sale_years'])->name('dashboard.sale_years');
+    Route::get('/purchase-month', [HomeController::class, 'purchase_month'])->name('dashboard.purchase_month');
+    Route::get('/expenses-month', [HomeController::class, 'expenses_month'])->name('dashboard.expenses_month');
+    Route::get('/invoices-pending-month', [HomeController::class, 'invoices_pending_month'])->name('dashboard.invoices_pending_month');
 
+
+    # Profile
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     # Task
     Route::get('/tareas', [TodoListController::class, 'index'])->name('task.index');
@@ -105,12 +117,18 @@ Route::middleware('auth')->group(function () {
 
     # Contract
     Route::get('/contratos', [ContractController::class, 'index'])->name('contract.index');
+    Route::get('/contratos/datatable-due', [ContractController::class, 'datatableDue'])->name('contract.datatableDue');
     Route::get('/contratos/create', [ContractController::class, 'create'])->name('contract.create');
     Route::post('/contratos', [ContractController::class, 'store'])->name('contract.store');
     Route::get('/contratos/{contract}/show', [ContractController::class, 'show'])->name('contract.show');
     Route::get('/contratos/{contract}/edit', [ContractController::class, 'edit'])->name('contract.edit');
     Route::put('/contratos/{contract}/update', [ContractController::class, 'update'])->name('contract.update');
     Route::get('/contratos/{contract}/delete', [ContractController::class, 'destroy'])->name('contract.destroy');
+
+    # ContractsRenewed
+    Route::get('/contratos/datatable-renew', [ContractsRenewedController::class, 'datatableRenew'])->name('contract.datatableRenew');
+    Route::get('/contratos/{contract}/renew', [ContractsRenewedController::class, 'create'])->name('contract.renew_contract');
+    Route::post('/contratos/{contract}/store-renew', [ContractsRenewedController::class, 'store'])->name('contract.store_renew');
 
     # Invoices
     Route::get('/facturas', [InvoiceController::class, 'index'])->name('invoice.index');
@@ -120,6 +138,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/facturas/{invoice}/edit', [InvoiceController::class, 'edit'])->name('invoice.edit');
     Route::put('/facturas/{invoice}/update', [InvoiceController::class, 'update'])->name('invoice.update');
     Route::get('/facturas/{invoice}/delete', [InvoiceController::class, 'destroy'])->name('invoice.destroy');
+    Route::post('/facturas/agregar-numero-factura', [InvoiceController::class, 'updateInvoiceFile'])->name('invoice.updateInvoiceFile');
+    Route::post('/facturas/agregar-forma-de-pago', [InvoiceController::class, 'changeFormPayment'])->name('invoice.changeFormPayment');
+    Route::post('/facturas/cambiar-status', [InvoiceController::class, 'changeStatus'])->name('invoice.changeStatus');
+
+    # Sales
+    Route::get('/ventas', [SaleController::class, 'index'])->name('sale.index');
+    Route::get('/ventas/datatable', [SaleController::class, 'datatable'])->name('sale.datatable');
+    Route::get('/ventas/create', [SaleController::class, 'create'])->name('sale.create');
+    Route::post('/ventas', [SaleController::class, 'store'])->name('sale.store');
+    Route::get('/ventas/{sale}/show', [SaleController::class, 'show'])->name('sale.show');
+    Route::get('/ventas/{sale}/edit', [SaleController::class, 'edit'])->name('sale.edit');
+    Route::put('/ventas/{sale}/update', [SaleController::class, 'update'])->name('sale.update');
+    Route::get('/ventas/{sale}/delete', [SaleController::class, 'destroy'])->name('sale.destroy');
 
     # Compras
     Route::get('/compras', [PurchaseController::class, 'index'])->name('purchase.index');
@@ -131,6 +162,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/compras/{purchase}/edit', [PurchaseController::class, 'edit'])->name('purchase.edit');
     Route::put('/compras/{purchase}/update', [PurchaseController::class, 'update'])->name('purchase.update');
     Route::get('/compras/{purchase}/delete', [PurchaseController::class, 'destroy'])->name('purchase.destroy');
+    Route::post('/compras/cambiar-status', [PurchaseController::class, 'cambiarStatus'])->name('purchase.cambiarStatus');
 
     # Purchase Order
     Route::get('/ordenes-de-compra', [PurchaseOrderController::class, 'index'])->name('purchaseorder.index');
@@ -141,6 +173,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/ordenes-de-compra/{purchaseorder}/edit', [PurchaseOrderController::class, 'edit'])->name('purchaseorder.edit');
     Route::put('/ordenes-de-compra/{purchaseorder}/update', [PurchaseOrderController::class, 'update'])->name('purchaseorder.update');
     Route::get('/ordenes-de-compra/{purchaseorder}/delete', [PurchaseOrderController::class, 'destroy'])->name('purchaseorder.destroy');
+    Route::get('/ordenes-de-compra/{purchaseorder}/pdf-purchaseorder', [PurchaseOrderController::class, 'generatepdf'])->name('purchaseorder.generatepdf');
+    Route::get('/ordenes-de-compra/{purchaseorder}/email-purchaseorder', [PurchaseOrderController::class, 'sendEmailPurchaseOrderpdf'])->name('purchaseorder.sendEmailPurchaseOrderpdf');
 
     # work order
     Route::get('/ordenes-de-trabajo', [WorkOrderController::class, 'index'])->name('workorder.index');
@@ -150,6 +184,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/ordenes-de-trabajo/{workorder}/edit', [WorkOrderController::class, 'edit'])->name('workorder.edit');
     Route::put('/ordenes-de-trabajo/{workorder}/update', [WorkOrderController::class, 'update'])->name('workorder.update');
     Route::post('/ordenes-de-trabajo/delete', [WorkOrderController::class, 'destroy'])->name('workorder.destroy');
+    Route::get('/ordenes-de-trabajo/{workorder}/workorderpdf', [WorkOrderController::class, 'workorderpdf'])->name('workorder.workorderpdf');
+    Route::get('/ordenes-de-trabajo/{workorder}/enviar-orden-de-trabajo', [WorkOrderController::class, 'sendEmailWorkorderpdf'])->name('workorder.sendEmailWorkorderpdf');
 
     # users
     Route::get('/usuarios', [UserController::class, 'index'])->name('user.index');

@@ -205,4 +205,14 @@ class PurchaseController extends Controller
         return Pdf::loadView('pdfs.purchase', compact('purchase'))
                 ->stream(''.config('app.name', 'Laravel').' - Compra.pdf');
     }
+
+    public function cambiarStatus(Request $request)
+    {
+        $quote = Purchase::find($request->id);
+        $quote->update([
+            'received' => $request->status
+        ]);
+
+        return redirect()->route('purchase.index')->with('success', 'Status de Compra Actualizada Correctamente');
+    }
 }

@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}" />
 <link rel="stylesheet" href="{{ asset('assets/vendor/libs/flatpickr/flatpickr.css') }}" />
 <link rel="stylesheet" href="{{ asset('assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.css') }}" />
 @endsection
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
@@ -24,17 +25,17 @@
                             <div class="row">
                                 <div class="mb-6 col-md-4">
                                     <div class="form-floating form-floating-outline">
-                                        <select id="customer" name="customer" class="form-select select2"
+                                        <select id="customer" name="customer_id" class="form-select select2"
                                         placeholder="Selecione una cliente">
                                             <option value="">-- Seleccionar --</option>
                                             @foreach ($customers as $item)
-                                            <option value="{{ $item->business_name }}" {{ old('customer') == $item->business_name ? 'selected' : '' }}>{{ $item->business_name }}</option>
+                                            <option value="{{ $item->id }}" {{ old('customer_id') == $item->id ? 'selected' : '' }}>{{ $item->business_name }}</option>
                                             @endforeach
                                         </select>
                                         <label for="code">Cliente</label>
-                                        @if($errors->has('customer'))
+                                        @if($errors->has('customer_id'))
                                         <div class="invalid-feedback">
-                                            {{ $errors->first('customer') }}
+                                            {{ $errors->first('customer_id') }}
                                         </div>
                                         @endif
                                     </div>
@@ -53,6 +54,20 @@
                                         @if($errors->has('type_contract'))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('type_contract') }}
+                                        </div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-floating form-floating-outline">
+                                        <input type="text" class="form-control flatpickr-input active"
+                                            placeholder="DD-MM-YYYY" name="start_date" id="flatpickr-date"
+                                            value="{{ old('start_date') }}">
+                                        <label for="start_date">Fecha Inicio</label>
+
+                                        @if($errors->has('start_date'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('start_date') }}
                                         </div>
                                         @endif
                                     </div>
@@ -116,6 +131,40 @@
                                         @if($errors->has('dominio'))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('dominio') }}
+                                        </div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="mb-6 col-md-4">
+                                    <div class="form-floating form-floating-outline">
+                                        <select id="confirm_invoice" name="confirm_invoice" class="form-select select2"
+                                        placeholder="Selecione un Plazo">
+                                            <option value="">-- Seleccionar --</option>
+                                            <option value="Si">Si</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                        <label for="confirm_invoice">¿Desea que se genere la factura del Contrato?</label>
+                                        @if($errors->has('confirm_invoice'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('confirm_invoice') }}
+                                        </div>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="mb-6 col-md-4">
+                                    <div class="form-floating form-floating-outline">
+                                        <select id="status" name="status" class="form-select select2"
+                                        placeholder="Selecione el Status">
+                                            <option value="">-- Seleccionar --</option>
+                                            <option value="Por Facturar" selected>Por Facturar</option>
+                                            <option value="Activo">Activo</option>
+                                            <option value="Vencido">Vencido</option>
+                                        </select>
+                                        <label for="status">Estatus del Contrato</label>
+                                        @if($errors->has('status'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('status') }}
                                         </div>
                                         @endif
                                     </div>

@@ -27,6 +27,7 @@ return new class extends Migration
             $table->text('note')->nullable();
             $table->string('file')->nullable();
             $table->enum('status', ['Por Facturar', 'Activo', 'Vencido'])->default('Por Facturar');
+            $table->enum('confirm_invoice', ['Si', 'No'])->default('Si');
             $table->timestamps();
         });
     }

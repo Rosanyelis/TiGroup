@@ -1,9 +1,10 @@
 @extends('layouts.app')
-@section('title', 'Orden de Compra - Crear')
+@section('title', 'Orden de Trabajo - Crear')
 @section('css')
 <link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}" />
 <link rel="stylesheet" href="{{ asset('assets/vendor/libs/flatpickr/flatpickr.css') }}" />
 <link rel="stylesheet" href="{{ asset('assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.css') }}" />
 @endsection
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
@@ -11,9 +12,9 @@
             <div class="col-md-12">
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Nueva Orden de Compra</h5>
+                        <h5 class="mb-0">Nueva Orden de Trabajo</h5>
 
-                        <a href="{{ route('purchaseorder.index') }}" class="btn btn-sm btn-secondary"
+                        <a href="{{ route('workorder.index') }}" class="btn btn-sm btn-secondary"
                         ><i class="ri-arrow-left-line me-1"></i> Regresar</a>
                     </div>
 
@@ -21,6 +22,7 @@
                         <form id="formWorkorder" class="needs-validation" action="{{ route('workorder.store') }}" method="POST"
                         enctype="multipart/form-data">
                             @csrf
+                            <h6>1. Datos de Proveedor y Asignación de Orden</h6>
                             <div class="row">
                                 <div class="mb-6 col-md-4">
                                     <div class="form-floating form-floating-outline">
@@ -39,16 +41,81 @@
                                         @endif
                                     </div>
                                 </div>
-
+                                <div class="mb-6 col-md-4">
+                                    <div class="form-floating form-floating-outline">
+                                        <select id="user_assigned_id" name="user_assigned_id" class="form-select select2"
+                                        placeholder="Selecione un Cliente">
+                                            <option value="">-- Seleccionar --</option>
+                                            @foreach ($users as $item)
+                                            <option value="{{ $item->id }}" {{ old('user_assigned_id') == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <label for="code">Usuarios</label>
+                                        @if($errors->has('user_assigned_id'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('user_assigned_id') }}
+                                        </div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="mb-6 col-md-12">
+                                    <div class="form-floating form-floating-outline">
+                                        <textarea name="notes" id="notes"
+                                        class="form-control h-px-100 @if($errors->has('notes')) is-invalid @endif"
+                                        placeholder="Ingrese detalles">{{ old('notes') }}</textarea>
+                                        <label for="code">Detalles</label>
+                                        @if($errors->has('notes'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('notes') }}
+                                        </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="my-6 mx-n4">
+                            <h6>2. Tareas a Realizar</h6>
+                            <div class="row">
+                                <div class="mb-6 col-md-6">
+                                    <div class="form-floating form-floating-outline">
+                                        <input
+                                            type="text"
+                                            id="task"
+                                            class="form-control"
+                                            placeholder=""
+                                        />
+                                        <label for="code">Actividades</label>
+                                    </div>
+                                </div>
+                                <div class="mb-6 col-md-2">
+                                    <button type="button" id="add_task" class="btn btn-info mt-1">
+                                        Agregar
+                                    </button>
+                                </div>
                                 <div class="w-100"></div>
-
+                                <div class="mb-6 col-md-12">
+                                    <div class="table-responsive text-nowrap">
+                                        <table class="table" id="table_tasks">
+                                            <thead>
+                                                <tr>
+                                                    <th width="80%">Actividades o Tareas</th>
+                                                    <th width="10%">Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbody_task"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="my-6 mx-n4">
+                            <h6>3. Productos o Servicios a Entregar o Utilizar</h6>
+                            <div class="row">
                                 <div class="mb-6 col-md-4">
                                     <div class="form-floating form-floating-outline">
                                         <select id="producto" name="producto" class="form-select select2"
                                         placeholder="Selecione un producto">
                                             <option value="">-- Seleccionar --</option>
                                             @foreach ($products as $item)
-                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                            <option value="{{ $item->id }}">{{ $item->code }} - {{ $item->name }}</option>
                                             @endforeach
                                         </select>
                                         <label for="code">Producto</label>
@@ -131,6 +198,7 @@
                                 <div class="mb-3 col-md-1">
                                     <input type="hidden" name="total" id="totalcomplete">
                                     <input type="hidden" name="array_products" id="array_products">
+                                    <input type="hidden" name="array_tasks" id="array_tasks">
 
                                     <button type="submit" class="btn btn-primary float-end"
                                         id="guardar">

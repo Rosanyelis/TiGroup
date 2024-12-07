@@ -7,8 +7,8 @@
     var dt_ajax_table = $('.datatables-purchase');
     const numberFormat2 = new Intl.NumberFormat('de-DE');
     var producto = $('#producto');
-    const basepath = "http://tigroup.test/assets/images/";
-    const baseStorage = "http://tigroup.test/";
+    const basepath = document.querySelector('html').getAttribute('data-base-url') + "assets/images/";
+    const baseStorage = document.querySelector('html').getAttribute('data-base-url');
     var totalfinal = 0;
     var datosTabla = [];
     var totalCotizado = 0;
@@ -87,9 +87,17 @@ $(function () {
             },
             {
                 targets: [5],
-                render: function (data) {
+                render: function (data, type, row) {
                     if (data == 0) {
-                        return '<span class="badge bg-danger">No Recibido</span>';
+                        return `<button type="button" class="btn btn-danger btn-sm dropdown-toggle"
+                                    data-bs-toggle="dropdown" aria-expanded="false">No Recibido
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <h6 class="dropdown-header text-uppercase">cambiar a</h6>
+                                    </li>
+                                    <li><a class="dropdown-item" href="#" onclick="changeStatus('Recibido', ${row.id})">Recibido</a></li>
+                                </ul>`;
                     }
                     if (data == 1) {
                         return '<span class="badge bg-success">Recibido</span>';
@@ -424,4 +432,27 @@ function deleteRecord(id) {
                 "/compras/"+id+"/delete";
         }
     })
+}
+
+function changeStatus(status, id) {
+    $('#my-form #status').val('1');
+    $('#my-form #id').val(id);
+
+    Swal.fire({
+        title: '¿Esta seguro de cambiar el estado a "' + status + '" de la Compra?',
+        text: "No podra cambiar el estado si es Recibido!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si, cambiar!',
+        cancelButtonText: 'Cancelar',
+        customClass: {
+            confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
+            cancelButton: 'btn btn-outline-danger waves-effect'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $('#my-form').submit();
+        }
+    });
 }

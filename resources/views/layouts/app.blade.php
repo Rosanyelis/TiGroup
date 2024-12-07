@@ -6,7 +6,8 @@
     class="light-style layout-navbar-fixed layout-menu-fixed layout-compact"
     dir="ltr"
     data-theme="theme-default"
-    data-assets-path="../../assets/"
+    data-assets-path="{{ asset('assets') }}/"
+    data-base-url="{{ url('/') }}"
     data-template="vertical-menu-template-no-customizer"
     data-style="light">
     <head>
@@ -21,7 +22,7 @@
         <meta name="description" content="" />
 
         <!-- Favicon -->
-        <link rel="icon" type="image/x-icon" href="assets/img/favicon/favicon.ico" />
+        <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon/favicon.ico') }}" />
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com" />

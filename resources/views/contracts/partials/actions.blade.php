@@ -17,13 +17,9 @@
             <i class="ri-delete-bin-fill ri-20px"></i>
             Eliminar Contrato
         </a>
-<!--
-        <a class="dropdown-item text-warning " href="{{ route('quote.quotepdf', $data->id) }}"
-            target="_blank">
-            <i class="ri-file-pdf-2-line ri-20px"></i> Cotizacion PDF
+        @if ($data->end_date <= date('Y-m-d') && $data->status == 'Activo' || $data->status == 'Vencido')
+        <a class="dropdown-item text-primary " href="{{ route('contract.renew_contract', $data->id) }}">
+            <i class="ri-arrow-up-down-line ri-20px"></i> Renovar Contrato
         </a>
-        <a class="dropdown-item text-success" href="{{ route('quote.sendEmailQuotepdf', $data->id) }}">
-            <i class="ri-mail-send-line ri-20px"></i>
-            Enviar Cotizacion
-        </a> -->
+        @endif
 </div>

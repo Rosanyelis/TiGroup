@@ -92,7 +92,7 @@
                                 <div class="mb-6 col-md-4">
                                     <div class="form-floating form-floating-outline">
                                         <input
-                                            type="text"
+                                            type="number"
                                             id="phone"
                                             name="phone"
                                             class="form-control @if($errors->has('phone')) is-invalid @endif"
@@ -176,4 +176,7 @@
             </div>
         </div>
     </div>
+@endsection
+@section('scripts')
+<script src="{{ asset('pagesjs/supplier.js') }}"></script>
 @endsection

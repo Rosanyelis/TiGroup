@@ -21,6 +21,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'firstname',
+        'lastname',
+        'phone',
+        'photo'
     ];
 
     /**
@@ -56,5 +60,5 @@ class User extends Authenticatable
         return $this->hasMany(TodoList::class, 'user_id', 'id');
     }
 
-    
+
 }

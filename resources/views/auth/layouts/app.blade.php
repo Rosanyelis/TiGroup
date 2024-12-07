@@ -5,7 +5,7 @@
     class="light-style layout-wide customizer-hide"
     dir="ltr"
     data-theme="theme-default"
-    data-assets-path="../../assets/"
+    data-assets-path="{{ asset('assets') }}/"
     data-template="vertical-menu-template-no-customizer"
     data-style="light">
     <head>
@@ -16,10 +16,10 @@
 
         <title>{{ config('app.name', 'Laravel') }} - @yield('title')</title>
 
-        <meta name="description" content="" />
+        <meta name="description" content="Sistema de gestion interna de clientes de Tigroup" />
 
         <!-- Favicon -->
-        <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
+        <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon.ico') }}" />
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com" />

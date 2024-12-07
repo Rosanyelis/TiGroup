@@ -7,8 +7,8 @@
     var dt_ajax_table = $('.datatables-quote');
     const numberFormat2 = new Intl.NumberFormat('de-DE');
     var producto = $('#producto');
-    const basepath = "http://tigroup.test/assets/images/";
-    const baseStorage = "http://tigroup.test/";
+    const basepath = document.querySelector('html').getAttribute('data-base-url') + "assets/images/";
+    const baseStorage = document.querySelector('html').getAttribute('data-base-url');
     var totalfinal = 0;
     var totalIVA = 0;
     var datosTabla = [];
@@ -177,7 +177,7 @@ $(function () {
             type: 'GET',
             url: '/cotizaciones/'+id+'/productjson',
             success: function(data) {
-                let costo = parseFloat(data.cost).toFixed(0);
+                let costo = parseFloat(data.price).toFixed(0);
                 $('#priceCost').val(costo);
                 $('#product_name').val(data.name);
                 $('#product_code').val(data.code);
@@ -236,9 +236,14 @@ $(function () {
         let code = $('#product_code').val();
         let price = parseFloat($('#priceCost').val());
         let quantity = parseFloat($('#quantity').val());
-        let profit = parseFloat($('#profit').val());
+        let profit = ($('#profit').val() == '') ? 0 : parseFloat($('#profit').val());
         let totalp = price * quantity;
-        let margen = totalp * (profit / 100);
+        let margen;
+        if (profit == 0) {
+            margen = 0;
+        } else {
+            margen = totalp * (profit / 100);
+        }
         let subtotal = totalp + margen;
 
         if (datosTabla.length > 0) {
@@ -492,7 +497,7 @@ function deleteRecord(id) {
     }).then((result) => {
         if (result.isConfirmed) {
             window.location.href =
-                "/cotizaciones/"+id+"/eliminar";
+                "/cotizaciones/"+id+"/delete";
         }
     })
 }
