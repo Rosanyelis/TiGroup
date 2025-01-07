@@ -197,12 +197,16 @@ Route::middleware('auth')->group(function () {
 
     # Kamban
     Route::get('/kamban', [KambanController::class, 'index'])->name('kamban.index');
-    Route::get('/kamban/create', [KambanController::class, 'create'])->name('kamban.create');
-    Route::post('/kamban', [KambanController::class, 'store'])->name('kamban.store');
-    Route::get('/kamban/{kamban}/show', [KambanController::class, 'show'])->name('kamban.show');
-    Route::get('/kamban/{kamban}/edit', [KambanController::class, 'edit'])->name('kamban.edit');
-    Route::put('/kamban/{kamban}/update', [KambanController::class, 'update'])->name('kamban.update');
-    Route::get('/kamban/{kamban}/delete', [KambanController::class, 'destroy'])->name('kamban.destroy');
+    Route::get('/kambanjson', [KambanController::class, 'kambanJson'])->name('kambanjson');
+    Route::post('/kamban/store-item', [KambanController::class, 'storeitem'])->name('kamban.storeitem');
+    Route::get('/kamban/{id}/show-item', [KambanController::class, 'showitem'])->name('kamban.showitem');
+    Route::post('/kamban/update-item', [KambanController::class, 'updateitem'])->name('kamban.updateitem');
+    Route::get('/kamban/{id}/delete-item', [KambanController::class, 'deleteitem'])->name('kamban.deleteitem');
+    # acciones en tablero
+    Route::post('/kamban/{workspace}/store-board', [KambanController::class, 'storeboard'])->name('kamban.storeboard');
+    Route::post('/kamban/rename-board', [KambanController::class, 'renameboard'])->name('kamban.renameboard');
+    Route::post('/kamban/delete-board', [KambanController::class, 'deleteboard'])->name('kamban.deleteboard');
+    Route::post('/kamban/move-item-board', [KambanController::class, 'moveitem'])->name('kamban.moveitem');
 
 });
 

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('workspace_id')->constrained('work_spaces')->onDelete('cascade');
             $table->string('title');
+            $table->text('title_slug');
             $table->enum('status', ['Activo', 'Archivado'])->default('Activo');
             $table->timestamps();
             $table->softDeletes();

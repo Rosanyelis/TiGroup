@@ -34,11 +34,12 @@ class ExpiryContractAdminNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $email = 'rosanyelismendoza@gmail.com';
+        // $email = 'rosanyelismendoza@gmail.com';
+        $email = ['rosanyelismendoza@gmail.com', 'juan@tigroup.cl', 'ventas@tigroup.cl'];
         return (new MailMessage)
                 ->subject('TiGroup - ¡Contrato de Cliente por Expirar!')
                 // ->to($email)
-                ->from($email)
+                ->from('rosanyelismendoza@gmail.com')
                 ->view('emails.ExpiryContractAdmin',
                 [
                     'customer' => $this->data['customer'],

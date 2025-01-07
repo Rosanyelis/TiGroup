@@ -53,7 +53,7 @@ $(function () {
                         if (row.status == 1) {
                             classes += "tachado ";
                         }
-                        if (moment(row.fecha_fin).format('DD/MM/YYYY') <= moment().format('DD/MM/YYYY')) {
+                        if (row.fecha_fin < moment().format('YYYY-MM-DD')) {
                             classes += "text-danger ";
                         }
 

@@ -25,6 +25,7 @@
                 <thead>
                     <tr>
                         <th>Razón Social o Nombre</th>
+                        <th>Nombre Fantasia</th>
                         <th>RUT</th>
                         <th>Representante</th>
                         <th>Correo</th>

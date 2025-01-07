@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Carbon\Carbon;
 use App\Models\Contract;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use App\Notifications\ExpiryContractNotification;
 use App\Notifications\ExpiryContractAdminNotification;
 
@@ -32,7 +33,7 @@ class SendExpirationReminder extends Command
     public function handle()
     {
         // Obtener los contratos que finalizan en los próximos 15 días
-        $contracts = Contract::where('end_date', '<=', Carbon::now()->addDays(0))
+        $contracts = Contract::where('end_date', '<=', Carbon::now())
             ->whereIn('status', ['Activo', 'Por Facturar'])
             ->with('customer') // Cargar la relación con el cliente
             ->get();
@@ -48,7 +49,7 @@ class SendExpirationReminder extends Command
             // Enviar correo al administrador
             $this->info('Enviando recordatorio de vencimiento para el
                 administrador');
-
+                Log::error($e->getMessage());
             $contract->customer->notify(new ExpiryContractAdminNotification([
                 'customer' => $contract->customer->business_name,
                 'type_contract' => $contract->type_contract

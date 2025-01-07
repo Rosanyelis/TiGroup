@@ -40,6 +40,24 @@
                                     <div class="form-floating form-floating-outline">
                                         <input
                                             type="text"
+                                            id="name_fantasy"
+                                            name="name_fantasy"
+                                            class="form-control @if($errors->has('name_fantasy')) is-invalid @endif"
+                                            placeholder="Ingrese Nombre Fantasia"
+                                            value="{{ $customer->name_fantasy }}"
+                                        />
+                                        <label for="code">Nombre Fantasia</label>
+                                        @if($errors->has('name_fantasy'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('name_fantasy') }}
+                                        </div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="mb-6 col-md-4">
+                                    <div class="form-floating form-floating-outline">
+                                        <input
+                                            type="text"
                                             id="rut"
                                             name="rut"
                                             class="form-control @if($errors->has('rut')) is-invalid @endif"

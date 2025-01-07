@@ -24,6 +24,7 @@ $(function () {
             },
             columns: [
                 {data: 'business_name', name: 'business_name'},
+                {data: 'name_fantasy', name: 'name_fantasy'},
                 {data: 'rut', name: 'rut'},
                 {data: 'name', name: 'name'},
                 {data: 'email', name: 'email'},
@@ -58,7 +59,7 @@ $(function () {
 
     $('#rut').on('change', function () {
         if (Fn.validaRut($("#rut").val())) {
-            alert("El rut ingresado es válido :D");
+            // alert("El rut ingresado es válido :D");
         } else {
             alert("El Rut no es válido :'( ");
             $('#rut').val('');

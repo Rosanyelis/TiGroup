@@ -303,11 +303,19 @@ $(function () {
 
 function calcular() {
     var totalfinal = 0;
+    var totalIVA = 0;
+    var total = 0;
     for (let i = 0; i < datosTabla.length; i++) {
         totalfinal += parseInt(datosTabla[i].total);
     }
+    totalIVA = parseFloat(totalfinal) * 0.19;
+    total = totalfinal + totalIVA;
+    $("#subtotal").empty();
+    $("#subtotal").text(parseFloat(totalfinal).toFixed(0));
+    $("#iva").empty();
+    $("#iva").text(totalIVA.toFixed(0));
     $("#total").empty();
-    $("#total").text(totalfinal.toFixed(0));
+    $("#total").text(total.toFixed(0));
 }
 
 function viewRecord(id) {

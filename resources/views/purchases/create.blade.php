@@ -168,6 +168,14 @@
                                             <tbody id="tbody_products"></tbody>
                                             <tfoot>
                                                 <tr>
+                                                    <td colspan="3" class="text-end">SubTotal</td>
+                                                    <td colspan="2"><span id="subtotal">0</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3" class="text-end">IVA (19%)</td>
+                                                    <td colspan="2" ><span id="iva">0</span></td>
+                                                </tr>
+                                                <tr>
                                                     <td colspan="3" class="text-end">Total</td>
                                                     <td colspan="2"><span id="total">0</span></td>
                                                 </tr>

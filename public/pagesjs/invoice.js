@@ -44,7 +44,7 @@ $(function () {
                     render: function (data, type, row) {
                         if (row.n_factura == null) {
                             return `
-                                <button type="button" class="btn btn-info btn-sm" onclick="addInvoicefile(${row.id})"
+                                <button type="button" class="btn btn-info btn-xs" onclick="addInvoicefile(${row.id})"
                                     aria-expanded="false">agregar
                                 </button>
                             `;
@@ -55,10 +55,18 @@ $(function () {
                     }
                 },
                 {
+                    targets: [1],
+                    render: function (data, type, row) {
+                        // agregar clase text-truncate para que se corten los textos
+                        return `<span class="text-truncate">${row.customer.business_name}</span>`;
+                        // return row.customer.business_name;
+                    }
+                },
+                {
                     targets: [3],
                     render: function (data) {
                         moment.locale('es');
-                        return moment(data).format('LL');
+                        return moment(data).format('ll');
                     }
                 },
                 {
@@ -85,7 +93,7 @@ $(function () {
                     render: function (data, type, row) {
                         if (data == 'Por Facturar') {
                             return `
-                                <button type="button" class="btn btn-info btn-sm dropdown-toggle"
+                                <button type="button" class="btn btn-info btn-xs dropdown-toggle"
                                     data-bs-toggle="dropdown" aria-expanded="false">Por Facturar
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end">
@@ -100,7 +108,7 @@ $(function () {
                         }
                         if (data == 'Facturado') {
                             return `
-                                <button type="button" class="btn btn-warning btn-sm dropdown-toggle"
+                                <button type="button" class="btn btn-warning btn-xs dropdown-toggle"
                                     data-bs-toggle="dropdown" aria-expanded="false">Facturado
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end">

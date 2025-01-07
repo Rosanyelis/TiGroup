@@ -34,7 +34,7 @@ class HomeController extends Controller
             ->where('status', 'Facturado')->orWhere('status', 'Por Facturar')->sum('net_amount');
         # total cotizados
         $quotations = Quotation::whereMonth('created_at', date('m'))
-            ->where('status', 'Facturado')->orWhere('status', 'Por Facturar')->sum('subtotal');
+            ->sum('subtotal');
 
         return response()->json(['sales' => $sales, 'invoices' => $invoices, 'quotations' => $quotations]);
     }
@@ -43,7 +43,6 @@ class HomeController extends Controller
     public function services()
     {
         $services = Contract::where('end_date', '>=', Carbon::now())
-            ->where('status', 'Activo')
             ->with('customer') // Cargar la relación con el cliente
             ->get();
 
@@ -123,23 +122,21 @@ class HomeController extends Controller
 
     public function purchase_month()
     {
-        $purchases = Purchase::whereMonth('created_at', date('m'))->sum('total');
+        $purchases = Purchase::sum('total');
         return response()->json(['purchases' => $purchases]);
     }
 
     public function expenses_month()
     {
-        $expenses = Expense::whereMonth('created_at', date('m'))->sum('amount');
+        $expenses = Expense::sum('amount');
         return response()->json(['expenses' => $expenses]);
     }
 
     public function invoices_pending_month()
     {
-        $invoices = Invoice::whereMonth('created_at', date('m'))
-            ->Where('status', 'Por Facturar')->sum('net_amount');
+        $invoices = Invoice::where('status', 'Por Facturar')->sum('net_amount');
 
-        $countInvoices = Invoice::whereMonth('created_at', date('m'))
-            ->Where('status', 'Por Facturar')->count();
+        $countInvoices = Invoice::where('status', 'Por Facturar')->count();
         return response()->json(['invoices_pendind' => $invoices, 'countInvoices' => $countInvoices]);
     }
 }

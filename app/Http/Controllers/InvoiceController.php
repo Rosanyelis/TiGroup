@@ -22,7 +22,8 @@ class InvoiceController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Invoice::with('customer', 'contract', 'quotation', 'contractrenewed', 'user')->get();
+            $data = Invoice::with('customer', 'contract', 'quotation', 'contractrenewed', 'user')
+                ->where('status', '!=', 'Pagado');
             return DataTables::of($data)
                 ->make(true);
         }

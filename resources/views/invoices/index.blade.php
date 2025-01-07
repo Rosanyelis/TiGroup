@@ -19,11 +19,11 @@
         </div>
 
         <div class="card-datatable text-nowrap">
-            <table class="datatables-invoice table table-sm">
+            <table class="datatables-invoice table table-sm" style="font-size: 14px">
                 <thead>
                     <tr>
                         <th>Nº Fac.</th>
-                        <th>Cliente</th>
+                        <th width="100px">Cliente</th>
                         <th>Motivo</th>
                         <th>Fecha Venc.</th>
                         <th>Total</th>
@@ -178,5 +178,5 @@
     <script src="{{ asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/moment/moment.js') }}"></script>
     <!-- Page JS -->
-    <script src="{{ asset('pagesjs/invoice.js') }}"></script>
+    <script src="{{ asset('pagesjs/invoice.js?v=1') }}"></script>
 @endsection

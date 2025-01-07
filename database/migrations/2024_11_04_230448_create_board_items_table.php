@@ -14,10 +14,12 @@ return new class extends Migration
         Schema::create('board_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('board_id')->constrained('boards')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->string('title');
-            $table->date('start-date'); // fecha de inicio
-            $table->date('due-date'); // fecha de vencimiento
-            $table->text('description');
+            $table->string('project_title')->nullable();
+            $table->text('phone')->nullable();
+            $table->text('email')->nullable();
+            $table->text('notes')->nullable();
             $table->string('priority'); // prioridad
             $table->string('badge-text');
             $table->string('badge');
